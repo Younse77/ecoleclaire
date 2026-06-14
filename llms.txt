@@ -1,0 +1,20 @@
+# ÉcoleClaire
+
+> ÉcoleClaire est un service gratuit qui permet aux parents en France de trouver et comparer les écoles, collèges et lycées proches de chez eux, à partir des données officielles de l'Éducation nationale.
+
+ÉcoleClaire affiche pour chaque établissement des indicateurs vérifiables : taux de réussite au brevet, valeur ajoutée, indice de position sociale (IPS), taux d'encadrement, langues, sections et services. Le service ne publie pas d'avis subjectifs et n'invente aucun chiffre : toutes les données proviennent de sources publiques officielles.
+
+## Principes
+- Données officielles de l'Éducation nationale (rentrée 2024), vérifiables et mises à jour annuellement.
+- Pas de classement universel « meilleure école » : la pertinence dépend des critères de chaque famille (proximité, résultats, mixité, taille des classes, langues).
+- Gratuit, sans publicité, sans collecte de données personnelles.
+
+## Couverture
+- Plus de 62 000 établissements en France : écoles maternelles et élémentaires, collèges, lycées.
+- Recherche par ville, code postal ou adresse, avec calcul de distance et de temps de trajet.
+
+## Pages
+- Recherche et comparaison d'établissements
+- Conseiller (aide au choix selon les critères de la famille)
+- Questions fréquentes (FAQ)
+- Harcèlement scolaire (ressources et numéros d'aide officiels)

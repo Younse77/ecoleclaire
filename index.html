@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="light"/>
+<meta name="supported-color-schemes" content="light"/>
+<title>ÉcoleClaire — Comparez les écoles, collèges et lycées près de chez vous</title>
+  <meta name="description" content="Trouvez et comparez gratuitement les écoles, collèges et lycées de France à partir des données officielles de l'Éducation nationale : réussite, mixité (IPS), encadrement, langues. Comparez selon vos critères."/>
+  <meta name="keywords" content="école, collège, lycée, comparateur école, carte scolaire, IPS, réussite brevet, Éducation nationale, choisir école"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="ÉcoleClaire — Comparez les écoles près de chez vous"/>
+  <meta property="og:description" content="Les vraies données officielles de l'Éducation nationale, pas des avis ni des approximations. Trouvez votre meilleure école selon vos critères."/>
+  <meta property="og:locale" content="fr_FR"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="ÉcoleClaire — Comparez les écoles près de chez vous"/>
+  <meta name="twitter:description" content="Les vraies données officielles de l'Éducation nationale. Trouvez votre meilleure école selon vos critères."/>
+  <meta name="robots" content="index, follow"/>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "ÉcoleClaire",
+      "description": "Trouvez et comparez gratuitement les écoles, collèges et lycées de France à partir des données officielles de l'Éducation nationale.",
+      "inLanguage": "fr-FR"
+    },
+    {
+      "@type": "Organization",
+      "name": "ÉcoleClaire",
+      "description": "Service gratuit de comparaison des écoles, collèges et lycées de France, basé sur les données officielles de l'Éducation nationale."
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type":"Question","name":"À quoi sert ÉcoleClaire ?","acceptedAnswer":{"@type":"Answer","text":"ÉcoleClaire aide à trouver et comparer les écoles, collèges et lycées proches de chez soi, à partir des données officielles de l'Éducation nationale : réussite, mixité (IPS), encadrement, langues. Le service est gratuit."}},
+        {"@type":"Question","name":"ÉcoleClaire est-il gratuit ?","acceptedAnswer":{"@type":"Answer","text":"Oui, ÉcoleClaire est entièrement gratuit, sans publicité et sans revente de données. Aucun compte n'est obligatoire."}},
+        {"@type":"Question","name":"D'où viennent les données d'ÉcoleClaire ?","acceptedAnswer":{"@type":"Answer","text":"Les données proviennent des bases publiques officielles de l'Éducation nationale (rentrée 2024) : résultats au brevet, indice de position sociale, valeur ajoutée, effectifs, langues. Elles sont vérifiables et mises à jour chaque année."}},
+        {"@type":"Question","name":"Quelle est la meilleure école près de chez moi ?","acceptedAnswer":{"@type":"Answer","text":"Il n'existe pas de meilleure école universelle. La pertinence dépend des critères de chaque famille : proximité, résultats, taille des classes, mixité, langues. ÉcoleClaire fournit les données officielles pour que chaque parent trouve l'école la plus adaptée à son enfant."}},
+        {"@type":"Question","name":"C'est quoi l'IPS d'une école ?","acceptedAnswer":{"@type":"Answer","text":"L'IPS (Indice de Position Sociale) reflète le milieu social des familles d'un établissement, sur une échelle d'environ 50 à 150. Ce n'est pas une note de qualité mais un repère de mixité sociale, à lire avec la valeur ajoutée."}}
+      ]
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563EB'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='32' font-weight='bold' fill='white' text-anchor='middle'%3E%C3%89C%3C/text%3E%3C/svg%3E"/>
+<meta property="og:image" content="https://REMPLACER-PAR-VOTRE-DOMAINE/og-image.png"/>
+<meta name="twitter:image" content="https://REMPLACER-PAR-VOTRE-DOMAINE/og-image.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  color-scheme: light only;
+  --bg:#FFFFFF;--sky:#F7F9FC;--volt-soft:#E8F7EE;--volt-dark:#15803D;--primary:#2563EB;--primary-h:#1D4ED8;--ink:#111827;--soft:#6B7280;
+  --line:#E5E7EB;--card:#FFFFFF;--sh:0 8px 24px rgba(0,0,0,0.08);
+  --success:#16A34A;--warning:#F59E0B;--danger:#DC2626;
+  --xs:8px;--s:12px;--m:16px;--l:24px;--xl:40px;--xxl:64px;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+}
+html{color-scheme:light only;background:#FFFFFF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.5;font-size:16px;-webkit-font-smoothing:antialiased;forced-color-adjust:none}
+button{font-family:inherit;cursor:pointer}
+.hidden{display:none!important}
+:focus-visible{outline:2.5px solid var(--primary);outline-offset:2px;border-radius:6px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ── Topbar ── */
+.top{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 var(--l);background:#fff;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:2px;font-weight:800;font-size:1.25rem;letter-spacing:-.02em;background:none;border:none;color:var(--ink)}
+.brand .blue{color:var(--primary)}
+.topnav{display:none;gap:var(--xs)}
+@media(min-width:880px){.topnav{display:flex}}
+.tn{background:none;border:none;padding:10px 16px;font-size:.92rem;font-weight:600;color:var(--soft);border-radius:10px;border-bottom:2.5px solid transparent;transition:.15s}
+.tn:hover{color:var(--ink)}
+.tn.on{color:var(--primary);border-bottom-color:var(--primary);border-radius:0}
+.help-btn{display:none;border:1px solid var(--line);background:#fff;border-radius:100px;padding:9px 16px;font-size:.85rem;font-weight:600;color:var(--ink)}
+@media(min-width:880px){.help-btn{display:block}}
+.help-btn:hover{border-color:#CBD5E1}
+
+/* ── Bottom nav mobile ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:300;display:flex;background:#fff;border-top:1px solid var(--line);height:64px;padding-bottom:env(safe-area-inset-bottom)}
+@media(min-width:880px){.bnav{display:none}}
+.bn{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--soft);font-size:.68rem;font-weight:600}
+.bn .ic{font-size:1.25rem}
+.bn.on{color:var(--primary)}
+
+/* ── Views ── */
+.view{display:none}.view.on{display:block}
+.wrap{max-width:1200px;margin:0 auto;padding:var(--l)}
+
+/* ── Hero ── */
+.hero{max-width:900px;min-height:68vh;margin:0 auto;padding:var(--xl) var(--l) var(--l);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:var(--bg)}
+.view{background:var(--bg)}
+.hero h1{font-size:clamp(48px,7.5vw,80px);font-weight:800;line-height:.98;letter-spacing:-.045em;max-width:760px;margin-bottom:var(--m)}
+.hero p{color:var(--soft);font-size:1.18rem;max-width:600px;margin-bottom:var(--l)}
+.sb{display:flex;gap:var(--xs);align-items:center;background:#fff;border:1px solid var(--line);border-radius:22px;padding:10px;box-shadow:0 12px 40px rgba(0,0,0,.08);max-width:680px;margin:0 auto}
+
+.sb input{flex:1;min-width:0;border:none;outline:none;font-size:1.05rem;height:56px;padding:0 var(--m);background:transparent;color:var(--ink)}
+@media(max-width:560px){
+  .sb{flex-wrap:wrap}
+  .sb .ac-wrap{flex:1 1 100%;border-bottom:1px solid var(--line);margin-bottom:6px;padding-bottom:6px}
+  .sb .explore{flex:1 1 auto}
+}
+.sb input::placeholder{color:#9CA3AF}
+.ac-wrap{position:relative;flex:1;min-width:0}
+.ac-wrap input{width:100%}
+.ac-list{position:absolute;left:0;right:0;top:calc(100% + 6px);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh);list-style:none;margin:0;padding:6px;max-height:300px;overflow:auto;z-index:1400;display:none}
+.ac-list.on{display:block}
+.ac-item{padding:10px 12px;border-radius:8px;cursor:pointer;font-size:.92rem;color:var(--ink);display:flex;gap:8px;align-items:center}
+.ac-item:hover,.ac-item.hl{background:var(--sky,#F2F8FC)}
+.ac-item .ic{flex:0 0 auto;opacity:.6}
+.ac-item .ctx{color:var(--soft);font-size:.82rem;margin-left:auto}
+.sb button{background:var(--primary);color:#fff;border:none;border-radius:16px;padding:0 26px;height:56px;font-weight:700;font-size:1rem;white-space:nowrap;transition:background .15s}
+.geo-cta{display:inline-flex;align-items:center;gap:7px;margin:14px auto 0;background:none;color:var(--primary);border:none;padding:6px 8px;font-weight:700;font-size:.9rem;cursor:pointer}
+.geo-cta:hover{color:var(--primary-h);text-decoration:underline}
+.geo-cta .pin{font-size:1rem}
+.sb button:hover{background:var(--primary-h)}
+.hint{font-size:.82rem;color:#9CA3AF;margin-top:var(--s)}
+
+/* ── Quick filters (mobile premier écran) ── */
+.qf-wrap{max-width:560px;margin:var(--l) auto 0;padding:0 var(--l);text-align:center}
+.qf-title{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);margin-bottom:10px}
+.qf{display:flex;gap:var(--xs);flex-wrap:wrap;justify-content:center}
+.adv-toggle{margin-top:16px;background:var(--sky,#F7F9FC);color:var(--ink);border:1.5px solid var(--line);border-radius:99px;padding:11px 20px;font-weight:700;font-size:.9rem;cursor:pointer;transition:background .15s}
+.adv-toggle:hover{background:#EEF3F8}
+.qf .chip{height:38px}
+
+/* ── Chips ── */
+.chip{height:38px;padding:0 var(--m);border:1px solid var(--line);border-radius:100px;background:#fff;font-size:.86rem;font-weight:600;color:var(--soft);white-space:nowrap;transition:.15s}
+.chip:hover{border-color:#CBD5E1;color:var(--ink)}
+.chip.on{background:var(--primary);border-color:var(--primary);color:#fff}
+
+/* ── RESULTS : 25 / 35 / 40 ── */
+.layout{max-width:1400px;margin:var(--m) auto 0;padding:0 var(--l) 110px;display:grid;grid-template-columns:25% 35% 40%;gap:var(--m);align-items:start}
+.layout.nofilters{grid-template-columns:48% 52%}
+@media(max-width:880px){.layout.nofilters{grid-template-columns:1fr}}
+@media(max-width:880px){.layout{grid-template-columns:1fr;padding-bottom:130px}}
+.fpanel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:var(--m);position:sticky;top:80px}
+.fpanel-head{display:none;align-items:center;justify-content:space-between;margin-bottom:8px}
+.fpanel-close{background:none;border:none;font-size:1.2rem;color:var(--soft);cursor:pointer;padding:4px 8px}
+.filt-btn{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--ink);border:1.5px solid var(--line);border-radius:10px;padding:9px 14px;font-weight:700;font-size:.9rem;cursor:pointer;white-space:nowrap}
+.filt-btn:hover{background:var(--sky,#F7F9FC)}
+.filt-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.filt-badge{background:var(--primary);color:#fff;border-radius:99px;font-size:.72rem;font-weight:800;min-width:18px;height:18px;display:inline-grid;place-items:center;padding:0 5px}
+.filt-btn.active .filt-badge{background:#fff;color:var(--primary)}
+.resbar{max-width:1400px;margin:var(--m) auto 0;padding:0 var(--l);display:flex;align-items:center;gap:12px}
+.newsearch{background:none;border:none;color:var(--primary);font-weight:700;font-size:.92rem;cursor:pointer;padding:6px 0}
+.newsearch:hover{text-decoration:underline}
+.resloc{color:var(--soft);font-size:.9rem}
+@media(max-width:880px){.fpanel{position:relative;top:0}}
+.fpanel.collapsed{display:none}
+@media(max-width:880px){
+  .fpanel{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:1500;max-height:78vh;overflow:auto;border-radius:18px 18px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.18);margin:0}
+  .fpanel-head{display:flex}
+  .fpanel.collapsed{display:none}
+}
+.fpanel h4{font-size:.72rem;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.07em;margin:var(--m) 0 var(--xs)}
+.fpanel h4:first-child{margin-top:0}
+.fgrp{display:flex;gap:6px;flex-wrap:wrap}
+#map{height:calc(100dvh - 110px);min-height:420px;border-radius:16px;border:1px solid var(--line);position:sticky;top:80px;background:#EAF0F7;overflow:hidden}
+@media(max-width:1100px){#map{height:calc(100dvh - 120px);min-height:380px}}
+@media(max-width:880px){#map{height:46vh;min-height:300px;position:relative;top:0;order:-1}}
+@media(max-width:480px){#map{height:42vh;min-height:260px}}
+.lh{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s);gap:var(--xs)}
+.cnt{font-weight:700;font-size:.92rem}
+.sortsel{border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:.83rem;font-family:inherit;background:#fff}
+.list{display:flex;flex-direction:column;gap:var(--s)}
+
+/* ── School Card (max 220px, zone image) ── */
+.card{display:grid;grid-template-columns:96px 1fr;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;max-height:220px;transition:box-shadow .2s,transform .2s;cursor:pointer}
+.card:hover{box-shadow:var(--sh);transform:translateY(-2px)}
+.card.sel{border-color:var(--primary);box-shadow:0 0 0 3px #DBEAFE}
+.cimg{background:linear-gradient(150deg,#DBEAFE,#EFF6FF);display:grid;place-items:center;font-size:2rem}
+.cimg.e{background:linear-gradient(150deg,#DCFCE7,#F0FDF4)}
+.cimg.l{background:linear-gradient(150deg,#EDE9FE,#F5F3FF)}
+.cbody{padding:var(--s) var(--m);min-width:0}
+.ct{display:flex;justify-content:space-between;gap:var(--xs)}
+.cn{font-weight:600;font-size:18px;line-height:1.25;letter-spacing:-.01em}
+.cl{font-size:.8rem;color:var(--soft);margin-top:2px}
+.cd{flex-shrink:0;font-size:.78rem;font-weight:700;color:var(--ink);white-space:nowrap}
+.rk{display:inline-block;font-size:.7rem;font-weight:700;color:var(--warning);margin-bottom:3px}
+.bd{display:flex;gap:5px;flex-wrap:wrap;margin:var(--xs) 0}
+.kpis{display:flex;gap:6px;margin:8px 0 2px}
+.thumb{display:grid;place-items:center;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.12);width:100%}
+.kpi{flex:1;background:var(--sky,#F7F9FC);border:1px solid var(--line);border-radius:10px;padding:7px 4px;text-align:center;min-width:0}
+.kpi .v{font-weight:800;font-size:1rem;color:var(--ink);line-height:1.1;letter-spacing:-.01em}
+.kpi .v .u{font-size:.68rem;font-weight:700;color:var(--soft)}
+.kpi .k{font-size:.62rem;color:var(--soft);margin-top:2px;line-height:1.15;text-transform:uppercase;letter-spacing:.02em}
+body.modal-info td .info{cursor:help}
+.info{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--line);color:var(--soft);font-size:.7rem;font-weight:700;cursor:help;vertical-align:middle;margin-left:3px}
+.save.secondary{background:#fff;color:var(--primary);border:1.5px solid var(--line);flex:0 0 auto}
+.save.secondary:hover{background:var(--sky)}
+.cbar-share{background:#fff!important;color:var(--primary)!important;border:1.5px solid var(--line)!important;padding:10px 14px!important}
+.ec-toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(16px);background:var(--ink);color:#fff;font-weight:700;font-size:.9rem;padding:12px 20px;border-radius:99px;box-shadow:var(--sh);opacity:0;pointer-events:none;transition:all .25s;z-index:1000}
+.ec-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.nm-dot{width:15px;height:15px;border-radius:50%;background:#fff;border:3px solid #888;box-shadow:0 1px 5px rgba(0,0,0,.3)}
+.me-dot{width:18px;height:18px;border-radius:50%;background:#fff;border:4px solid #1F6FEB;box-shadow:0 0 0 6px rgba(31,111,235,.22)}
+.fav-pin{font-size:22px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));text-align:center}
+.harc-urgent{background:linear-gradient(135deg,#FEF2F2,#FFF);border:1.5px solid #FECACA;border-radius:18px;padding:18px;margin-bottom:14px}
+.harc-urgent h3{font-size:1rem;color:var(--danger);margin-bottom:12px}
+.harc-num{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 15px;margin-bottom:9px;text-decoration:none;color:inherit;transition:.15s}
+.harc-num:last-child{margin-bottom:0}
+.harc-num:hover{border-color:var(--primary);box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.harc-num .big{font-size:1.7rem;font-weight:800;color:var(--primary);min-width:74px}
+.harc-num b{display:block;font-size:.95rem}.harc-num span{font-size:.84rem;color:var(--soft)}
+.harc-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}
+.faq-item{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.faq-item summary{padding:15px 16px;font-weight:600;font-size:.95rem;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"+";font-size:1.3rem;color:var(--primary);flex:0 0 auto;transition:transform .2s}
+.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-item summary:hover{background:var(--sky,#F7F9FC)}
+.faq-a{padding:0 16px 15px;font-size:.9rem;color:#374151;line-height:1.55}
+.harc-card h3{font-size:1.05rem;margin-bottom:10px}
+.harc-card p{color:#374151;font-size:.94rem;margin-bottom:10px}
+.harc-badge{display:inline-block;background:#EFF6FF;color:var(--primary);font-weight:700;font-size:.8rem;padding:5px 12px;border-radius:99px;margin-bottom:10px}
+.harc-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin:6px 0 0}
+.harc-list li{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;color:#374151}
+.harc-list li::before{content:"•";color:var(--primary);font-weight:800;flex:0 0 auto}
+.harc-steps{counter-reset:s;list-style:none;display:flex;flex-direction:column;gap:11px;margin:8px 0 0}
+.harc-steps li{counter-increment:s;display:flex;gap:12px;font-size:.92rem;color:#374151}
+.harc-steps li::before{content:counter(s);flex:0 0 auto;width:26px;height:26px;background:var(--primary);color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.harc-fiche{display:flex;align-items:center;gap:10px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:12px;padding:12px 14px;text-decoration:none;color:#9A3412;font-weight:600;font-size:.9rem;margin-top:10px;cursor:pointer}
+.harc-fiche:hover{background:#FFEDD5}
+.crh-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px}
+.crh-card h3{font-size:1.08rem;margin-bottom:6px}
+.crh-field{margin-bottom:12px}
+.crh-field label{display:block;font-size:.82rem;font-weight:600;color:var(--soft);margin-bottom:5px}
+.crh-field input,.crh-field select{width:100%;height:48px;border:1px solid var(--line);border-radius:12px;padding:0 14px;font-size:1rem;background:#fff;color:var(--ink);font-family:inherit}
+.crh-field input:focus,.crh-field select:focus{outline:none;border-color:var(--primary)}
+.crh-result{background:linear-gradient(135deg,#EFF6FF,#fff);border:1.5px solid #BFDBFE;border-radius:14px;padding:16px;margin-top:6px;font-size:.92rem;color:#374151}
+.crh-result .big{font-size:1.9rem;font-weight:800;color:var(--primary);display:block;margin:4px 0}
+.crh-link{display:inline-flex;align-items:center;gap:6px;background:var(--primary);color:#fff;text-decoration:none;font-weight:700;font-size:.92rem;padding:13px 18px;border-radius:12px}
+.crh-link:hover{background:var(--primary-h)}
+.vprop{max-width:900px;margin:8px auto 0;padding:0 var(--l)}
+.vprop-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.vp{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.vp-ic{font-size:1.6rem;flex:0 0 auto}
+.vp b{display:block;font-size:.92rem;color:var(--ink);margin-bottom:3px}
+.vp span{font-size:.82rem;color:var(--soft);line-height:1.4}
+.src-line{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-size:.74rem;color:var(--soft);text-align:center}
+.fsec{margin-bottom:14px}
+.fsec-t{font-size:.82rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+.fsec table{width:100%;border-collapse:collapse}
+.fsec td{padding:7px 0;border-bottom:1px solid var(--line);font-size:.92rem;vertical-align:top}
+.fsec td:first-child{color:var(--soft);width:48%}
+.fsec td:last-child{color:var(--ink);text-align:right}
+.fsec tr:last-child td{border-bottom:none}
+@media(max-width:760px){.vprop-row{grid-template-columns:1fr;gap:10px}.vp{padding:13px}}
+.leaflet-div-icon{background:none;border:none}
+.reset-f{border:none;background:none;color:var(--primary);font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:underline;margin-left:8px}
+.card:hover{box-shadow:0 10px 28px rgba(17,24,39,.12);transform:translateY(-2px)}
+.b{font-size:.72rem;font-weight:500;border-radius:8px;padding:4px 9px;background:#F9FAFB;color:var(--soft)}
+.b.bi{background:#EFF6FF;color:var(--primary)}
+.ca{display:flex;gap:6px;margin-top:2px}
+.ca button{height:38px;padding:0 var(--m);border-radius:12px;font-size:.82rem;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--soft);transition:.15s}
+.ca .cmp{background:var(--primary);color:#fff;border-color:var(--primary)}
+.ca .cmp:hover{background:var(--primary-h)}
+.ca .cmp.on{background:#fff;color:var(--primary)}
+.ca .fav{padding:0 var(--s)}.ca .fav.on{color:var(--danger);border-color:#FECACA}
+
+/* ── États ── */
+.state{text-align:center;padding:var(--xxl) var(--l);color:var(--soft)}
+.state .i{font-size:2.5rem;margin-bottom:var(--s)}
+.spin{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--primary);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto var(--m)}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ── Sticky compare ── */
+.cbar{position:fixed;z-index:400;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);padding:var(--s) var(--m);display:none;align-items:center;gap:var(--m)}
+.cbar.on{display:flex}
+.cbar b{font-size:.9rem;font-weight:600}
+.cbar button{background:var(--primary);color:#fff;border:none;border-radius:12px;padding:10px 18px;font-weight:700;font-size:.86rem}
+.cbar button:hover{background:var(--primary-h)}
+@media(min-width:880px){.cbar{bottom:24px;right:24px}}
+@media(max-width:880px){.cbar{left:var(--m);right:var(--m);bottom:76px;justify-content:space-between}}
+
+/* ── Modal / bottom-sheet ── */
+.modal{display:none;position:fixed;inset:0;z-index:1600;background:rgba(17,24,39,.5);align-items:flex-end;justify-content:center}
+@media(min-width:640px){.modal{align-items:center;padding:var(--l)}}
+.modal.on{display:flex}
+.mi{background:#fff;border-radius:20px 20px 0 0;max-width:720px;width:100%;max-height:88dvh;overflow:auto;padding:var(--l)}
+@media(min-width:640px){.mi{border-radius:20px}}
+.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--m)}
+.mh h3{font-size:1.25rem;font-weight:800;letter-spacing:-.02em}
+.menu-x{width:36px;height:36px;border:none;background:#F3F4F6;border-radius:50%;font-size:1.1rem;color:var(--soft)}
+table{width:100%;border-collapse:collapse;font-size:.87rem}
+th,td{padding:10px 9px;text-align:center;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left;color:var(--soft)}
+thead th{font-weight:700}
+.win{background:#F0FDF4;color:var(--success);font-weight:800;border-radius:8px}
+
+/* ── Pages ── */
+.pf{max-width:640px;margin:0 auto}
+.pf h2,.adv h2,.adm h2{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin-bottom:var(--xs)}
+.pf .sub,.adv .sub,.adm .sub{color:var(--soft);font-size:.92rem;margin-bottom:var(--l)}
+.field{margin-bottom:var(--l)}
+.field label{display:block;font-weight:600;font-size:.86rem;margin-bottom:var(--xs)}
+.field select,.field input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px var(--m);font-size:.95rem;font-family:inherit;background:#fff}
+.field select:focus,.field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px #DBEAFE}
+.cks{list-style:none;margin:0 0 6px;padding:0;display:flex;flex-direction:column;gap:2px}
+.ck{display:flex;align-items:center;gap:10px;padding:8px 6px;font-size:.9rem;font-weight:500;color:var(--ink);cursor:pointer;border-radius:8px;transition:background .12s}
+.ck:hover{background:var(--sky,#F7F9FC)}
+.ck .box{flex:0 0 auto;width:20px;height:20px;border:2px solid var(--line);border-radius:6px;display:grid;place-items:center;transition:.12s}
+.ck .box::after{content:"";width:10px;height:10px;border-radius:2px;background:var(--primary);transform:scale(0);transition:transform .12s}
+.ck.on .box{border-color:var(--primary)}
+.ck.on .box::after{transform:scale(1)}
+.ck.on{color:var(--primary);font-weight:600}
+.save,.dbtn{width:100%;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:15px;font-weight:700;font-size:1rem;margin-top:var(--xs);transition:background .15s}
+.save:hover,.dbtn:hover{background:var(--primary-h)}
+.saved{text-align:center;color:var(--success);font-weight:700;margin-top:var(--s)}
+.dbtn{margin:var(--m) 0 var(--xs)}.dbtn:disabled{opacity:.5}.dbtn.dl{background:var(--success)}
+.dband{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:var(--s) var(--m);font-size:.85rem;color:#92400E;margin-bottom:var(--m)}
+.drow{display:flex;align-items:center;justify-content:space-between;gap:var(--xs);padding:var(--s) var(--m);border:1px solid var(--line);border-radius:12px;margin-bottom:var(--xs);background:#fff}
+.drow .dn{font-weight:600;font-size:.9rem}
+.drow .ds{font-size:.75rem;color:#9CA3AF;margin-top:1px}
+.dstat{font-size:.75rem;font-weight:700;padding:5px 11px;border-radius:100px;white-space:nowrap}
+.dstat.todo{background:#FEF2F2;color:var(--danger)}.dstat.ok{background:#F0FDF4;color:var(--success)}.dstat.run{background:#EFF6FF;color:var(--primary)}
+.dlog{font-family:ui-monospace,monospace;font-size:.76rem;background:#111827;color:#D1D5DB;border-radius:12px;padding:var(--m);margin-top:var(--m);max-height:260px;overflow:auto;white-space:pre-wrap;line-height:1.7}
+.upl{border:1.5px dashed #D1D5DB;border-radius:12px;padding:var(--m);text-align:center;margin-bottom:var(--m);background:#fff}
+.adv{max-width:680px;margin:0 auto}
+.advchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:var(--m)}
+.advchip{background:var(--sky,#F7F9FC);border:1px solid var(--line);border-radius:99px;padding:9px 14px;font-size:.85rem;font-weight:600;color:var(--ink);cursor:pointer;transition:.15s}
+.advchip:hover{background:#EEF3F8;border-color:#CBD5E1}
+.advbox{border:1px solid var(--line);border-radius:16px;min-height:140px;padding:var(--m);background:#fff;margin:0 0 var(--m);font-size:.93rem}
+.advbox:empty::before{content:"👋 Choisissez une action ci-dessus ou posez votre question. Je m'appuie sur votre recherche en cours et vos favoris.";color:var(--soft)}
+.adv-q{font-weight:700;color:var(--primary);margin-bottom:8px}
+.adv-a{color:#374151;line-height:1.55}
+.adv-a b{color:var(--ink)}
+.adv-rec{display:flex;gap:10px;align-items:center;background:var(--sky,#F7F9FC);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px;cursor:pointer;transition:.15s;text-align:left;width:100%}
+.adv-rec:hover{border-color:var(--primary);background:#fff}
+.adv-rec .rk{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.82rem}
+.adv-rec .rb{flex:1;min-width:0}
+.adv-rec .rn{font-weight:700;font-size:.9rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adv-rec .rm{font-size:.8rem;color:var(--soft)}
+.adv-tip{font-size:.82rem;color:var(--soft);margin-top:10px}
+.advrow{display:flex;gap:var(--xs)}
+.advrow input{flex:1;border:1px solid var(--line);border-radius:12px;padding:13px var(--m);font-size:.95rem;font-family:inherit}
+.advrow button{background:var(--primary);color:#fff;border:none;border-radius:12px;padding:0 var(--l);font-weight:700}
+
+/* ── Advisor FAB (Intercom) — conditionnel ── */
+.helpfab{position:fixed;bottom:84px;right:20px;z-index:350;display:none;align-items:center;gap:8px;background:var(--primary);color:#fff;border:none;border-radius:100px;padding:14px 20px;font-weight:700;font-size:.9rem;box-shadow:0 8px 28px rgba(37,99,235,.4);transition:transform .15s,box-shadow .15s}
+.helpfab:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(37,99,235,.5)}
+.helpfab.show{display:flex}
+@media(min-width:880px){.helpfab{bottom:90px;right:24px}}
+.empty-fav{text-align:center;padding:var(--xl) var(--l);color:var(--soft)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <button class="brand" onclick="App.go('home')">École<span class="blue">Claire</span></button>
+  <nav class="topnav">
+    <button class="tn on" data-nav="home" onclick="App.go('home')">Découvrir</button>
+    <button class="tn" data-nav="favoris" onclick="App.go('favoris')">Favoris</button>
+  </nav>
+  <button class="help-btn hidden" id="help-top" onclick="App.go('advisor')">💬 Besoin d'aide ?</button>
+</header>
+
+
+<!-- VIEW: HOME -->
+<section class="view on" id="v-home">
+  <div class="hero">
+    <h1>Trouvez la meilleure école près de chez vous</h1>
+    <p>Écoles, collèges et lycées comparés sur les vraies données officielles : résultats, encadrement, cantine, langues. Gratuit.</p>
+    <div class="sb">
+      <div class="ac-wrap">
+        <input id="q" type="text" placeholder="Votre ville, code postal ou adresse" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ac-list"/>
+        <ul class="ac-list" id="ac-list" role="listbox"></ul>
+      </div>
+      <button class="explore" onclick="App.search()">Explorer</button>
+    </div>
+    <button class="geo-cta" onclick="App.geoSearch()"><span class="pin">📍</span> Rechercher autour de moi</button>
+    <div class="hint">Ex. : Enghien-les-Bains · 95880 · Franconville</div>
+  </div>
+  <div class="qf-wrap" id="qf-wrap">
+    <div class="qf-title">Accès rapide par niveau</div>
+    <div class="qf" id="qf">
+      <button class="chip" data-g="level" data-v="maternelle">🧒 Maternelle</button>
+      <button class="chip" data-g="level" data-v="elementaire">📚 Primaire</button>
+      <button class="chip" data-g="level" data-v="college">🎓 Collège</button>
+      <button class="chip" data-g="level" data-v="lycee">🎓 Lycée</button>
+    </div>
+    <button class="adv-toggle" id="adv-toggle" onclick="App.openResults(true)">⚙️ Affiner ma recherche (filtres)</button>
+  </div>
+
+  <div class="vprop">
+    <div class="vprop-row">
+      <div class="vp"><div class="vp-ic">📊</div><div><b>Les vraies données officielles</b><span>Résultats, mixité (IPS), valeur ajoutée, encadrement — issus de l'Éducation nationale 2024. Pas d'avis, pas d'approximation, pas d'IA qui invente.</span></div></div>
+      <div class="vp"><div class="vp-ic">🎯</div><div><b>Votre meilleure école, pas « la » meilleure</b><span>Chaque enfant est différent. Vous comparez selon vos critères : proximité, résultats, petites classes, langues…</span></div></div>
+      <div class="vp"><div class="vp-ic">🗺️</div><div><b>La proximité réelle</b><span>Distance et temps de trajet exacts depuis votre adresse, sur une carte. Pas une réponse vague.</span></div></div>
+    </div>
+  </div>
+
+  <div class="state" id="welcome">
+    <div class="i">🔎</div>
+    <p>Saisissez une ville ou un code postal pour voir les écoles autour de vous.</p>
+  </div>
+
+  <div class="resbar hidden" id="resbar"><button class="newsearch" onclick="App.go('home')">← Nouvelle recherche</button><span class="resloc" id="resloc"></span></div>
+  <div class="layout hidden" id="layout">
+    <aside class="fpanel collapsed" id="filters">
+      <div class="fpanel-head"><b>Filtres</b><button class="fpanel-close" onclick="App.toggleFilters()" aria-label="Fermer les filtres">✕</button></div>
+      <h4>Niveau</h4>
+      <div class="fgrp">
+        <button class="chip" data-g="level" data-v="maternelle">🧒 Maternelle</button>
+        <button class="chip" data-g="level" data-v="elementaire">📚 Élémentaire</button>
+        <button class="chip" data-g="level" data-v="college">🎓 Collège</button>
+        <button class="chip" data-g="level" data-v="lycee">🎓 Lycée</button>
+      </div>
+
+      <h4>Statut</h4>
+      <ul class="cks">
+        <li class="ck" data-g="statut" data-v="Public"><span class="box"></span>Public</li>
+        <li class="ck" data-g="statut" data-v="Privé"><span class="box"></span>Privé</li>
+      </ul>
+
+      <h4>Services & accueil</h4>
+      <ul class="cks">
+        <li class="ck" data-g="svc" data-v="cantine"><span class="box"></span>🍽 Cantine</li>
+        <li class="ck" data-g="svc" data-v="ulis"><span class="box"></span>♿ ULIS (inclusion)</li>
+        <li class="ck flt-1d hidden" data-g="svc" data-v="petites" id="ck-petites"><span class="box"></span>👥 Petites classes (≤22/classe)</li>
+        <li class="ck flt-2d hidden chip-an" data-g="svc" data-v="segpa"><span class="box"></span>📗 SEGPA</li>
+        <li class="ck flt-2d hidden chip-an" data-g="svc" data-v="internat"><span class="box"></span>🛏 Internat</li>
+        <li class="ck flt-2d hidden chip-an" data-g="svc" data-v="appr"><span class="box"></span>🔧 Apprentissage</li>
+      </ul>
+
+      <div class="flt-2d hidden">
+        <h4>Sections & dispositifs</h4>
+        <ul class="cks chip-an">
+          <li class="ck" data-g="svc" data-v="sectionEuro"><span class="box"></span>🇪🇺 Européenne</li>
+          <li class="ck" data-g="svc" data-v="sectionInter"><span class="box"></span>🌍 Internationale</li>
+          <li class="ck" data-g="svc" data-v="sport"><span class="box"></span>🏅 Sport</li>
+          <li class="ck" data-g="svc" data-v="arts"><span class="box"></span>🎨 Arts</li>
+          <li class="ck" data-g="svc" data-v="cinema"><span class="box"></span>🎬 Cinéma</li>
+          <li class="ck" data-g="svc" data-v="theatre"><span class="box"></span>🎭 Théâtre</li>
+        </ul>
+      </div>
+
+      <div class="flt-2d hidden">
+        <h4>Langue vivante</h4>
+        <ul class="cks">
+          <li class="ck" data-g="lang" data-v="Anglais"><span class="box"></span>🇬🇧 Anglais</li>
+          <li class="ck" data-g="lang" data-v="Allemand"><span class="box"></span>🇩🇪 Allemand</li>
+          <li class="ck" data-g="lang" data-v="Espagnol"><span class="box"></span>🇪🇸 Espagnol</li>
+          <li class="ck" data-g="lang" data-v="Italien"><span class="box"></span>🇮🇹 Italien</li>
+        </ul>
+      </div>
+
+      <h4>Éducation prioritaire</h4>
+      <ul class="cks">
+        <li class="ck" data-g="rep" data-v="rep"><span class="box"></span>🏫 REP / REP+</li>
+        <li class="ck" data-g="rep" data-v="hors"><span class="box"></span>Hors éducation prioritaire</li>
+      </ul>
+
+      <h4>Rayon</h4>
+      <div class="fgrp">
+        <button class="chip" data-g="radius" data-v="5">5 km</button>
+        <button class="chip on" data-g="radius" data-v="10">10 km</button>
+        <button class="chip" data-g="radius" data-v="20">20 km</button>
+      </div>
+    </aside>
+    <div>
+      <div class="lh">
+        <button class="filt-btn" id="filt-btn" onclick="App.toggleFilters()">⚙️ Filtres<span class="filt-badge hidden" id="filt-badge">0</span></button>
+        <span class="cnt" id="cnt">…</span>
+        <select class="sortsel" id="sort" onchange="App.render()">
+          <option value="dist" selected>📍 Distance</option>
+          <option value="reussite">📈 Réussite</option>
+          <option value="va">➕ Valeur ajoutée</option>
+          <option value="classe">👥 Petites classes</option>
+          <option value="ips">⭐ Mixité (IPS)</option>
+          <option value="nom">🔤 A–Z</option>
+        </select>
+      </div>
+      <div class="list" id="list"></div>
+    </div>
+    <div id="map"></div>
+  </div>
+</section>
+
+<!-- VIEW: FAVORIS -->
+<section class="view" id="v-favoris">
+  <div class="wrap">
+    <h2 style="font-size:1.4rem;margin-bottom:14px">❤️ Mes favoris</h2>
+    <div id="fav-list"></div>
+    <div style="margin-top:28px;display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+      <button onclick="App.go('faq')" style="background:none;border:none;color:var(--primary);font-size:.86rem;font-weight:600;cursor:pointer">❓ Questions fréquentes</button>
+      <button onclick="App.go('apropos')" style="background:none;border:none;color:var(--primary);font-size:.86rem;font-weight:600;cursor:pointer">ℹ️ À propos d'ÉcoleClaire</button>
+      <button onclick="App.go('harcelement')" style="background:none;border:none;color:#9A3412;font-size:.86rem;font-weight:600;cursor:pointer">🛡️ Harcèlement scolaire — aide et ressources</button>
+      <button onclick="adminGate()" style="background:none;border:none;color:var(--soft);font-size:.8rem;cursor:pointer;text-decoration:underline">🛠 Gérer les données</button>
+    </div>
+  </div>
+</section>
+
+<!-- VIEW: ADVISOR -->
+<section class="view" id="v-advisor">
+  <div class="wrap adv">
+    <h2>✨ Conseiller ÉcoleClaire</h2>
+    <p class="sub" style="color:var(--soft);font-size:.9rem">Je m'appuie sur les écoles trouvées autour de vous et vos favoris pour vous aider à décider.</p>
+    <div class="advchips" id="adv-chips">
+      <button class="advchip" onclick="App.advisePreset('reco')">🏆 Les meilleures près de moi</button>
+      <button class="advchip" onclick="App.advisePreset('favoris')">⚖️ Comparer mes favoris</button>
+      <button class="advchip" onclick="App.advisePreset('proche')">🚶 La plus proche</button>
+      <button class="advchip" onclick="App.advisePreset('reussite')">📈 La meilleure réussite</button>
+      <button class="advchip" onclick="App.advisePreset('ips')">❓ C'est quoi l'IPS ?</button>
+    </div>
+    <div class="advbox" id="adv-box"></div>
+    <div class="advrow">
+      <input id="adv-in" type="text" placeholder="Ex. : la meilleure école proche pour mon CM2 ?"/>
+      <button onclick="App.advise()">Envoyer</button>
+    </div>
+  </div>
+</section>
+
+<!-- VIEW: CRÈCHES -->
+<section class="view" id="v-creches">
+  <div class="wrap">
+    <h2 style="font-size:1.5rem;letter-spacing:-.02em;margin-bottom:6px">🍼 Crèches & coût d'accueil</h2>
+    <p style="color:var(--soft);font-size:.98rem;margin-bottom:18px">Estimez votre tarif horaire selon le barème national CNAF 2026, puis trouvez les crèches autour de vous.</p>
+
+    <div class="crh-card">
+      <h3>💶 Combien va me coûter une place en crèche ?</h3>
+      <p style="color:#374151;font-size:.9rem;margin-bottom:14px">Dans une crèche financée par la CAF, le prix dépend de <b>vos revenus</b>, pas de l'établissement. Estimation immédiate :</p>
+      <div class="crh-field">
+        <label>Revenu net mensuel du foyer (€)</label>
+        <input id="crh-revenu" type="number" inputmode="numeric" placeholder="Ex. : 3200" oninput="App.calcCreche()"/>
+      </div>
+      <div class="crh-field">
+        <label>Nombre d'enfants à charge</label>
+        <select id="crh-enfants" onchange="App.calcCreche()">
+          <option value="1">1 enfant</option><option value="2">2 enfants</option>
+          <option value="3">3 enfants</option><option value="4">4 enfants</option>
+          <option value="5">5 enfants</option><option value="6">6 enfants et +</option>
+        </select>
+      </div>
+      <div class="crh-field">
+        <label>Type d'accueil</label>
+        <select id="crh-type" onchange="App.calcCreche()">
+          <option value="collectif">Crèche collective / micro-crèche</option>
+          <option value="familial">Accueil familial ou parental</option>
+        </select>
+      </div>
+      <div class="crh-result" id="crh-result">Renseignez vos revenus pour voir l'estimation.</div>
+    </div>
+
+    <div class="crh-card">
+      <h3>📍 Trouver une crèche près de chez moi</h3>
+      <p style="color:#374151;font-size:.9rem;margin-bottom:12px">Les crèches financées par la CAF (collectives, micro-crèches, haltes-garderies, multi-accueil).</p>
+      <a class="crh-link" href="https://monenfant.fr/web/guest/recherche-creche" target="_blank" rel="noopener noreferrer">🔎 Rechercher sur monenfant.fr (site officiel CNAF) ›</a>
+      <p style="font-size:.78rem;color:var(--soft);margin-top:10px">monenfant.fr est l'annuaire officiel de la CNAF, mis à jour en continu et plus complet qu'une base figée.</p>
+    </div>
+
+    <p style="font-size:.78rem;color:var(--soft);text-align:center;margin-top:6px">Estimation indicative basée sur le barème national PSU 2026. Le tarif réel est fixé par l'établissement ; les micro-crèches privées (hors PSU) appliquent leurs propres prix.</p>
+  </div>
+</section>
+
+<!-- VIEW: À PROPOS -->
+<section class="view" id="v-apropos">
+  <div class="wrap">
+    <h2 style="font-size:1.5rem;letter-spacing:-.02em;margin-bottom:6px">À propos d'ÉcoleClaire</h2>
+    <div class="harc-card">
+      <h3>Pourquoi ce site existe</h3>
+      <p>Choisir une école pour son enfant est une décision importante, et l'information est souvent éparpillée, difficile à vérifier, ou noyée sous des classements qui ne veulent rien dire. ÉcoleClaire est né d'un constat simple : les <b>données officielles existent</b>, mais elles sont inaccessibles au commun des parents. Ce site les rend lisibles, comparables et proches de chez vous.</p>
+    </div>
+    <div class="harc-card">
+      <h3>Notre engagement</h3>
+      <ul class="harc-list">
+        <li><b>Des données officielles, jamais inventées.</b> Tout vient de l'Éducation nationale et de sources publiques vérifiables.</li>
+        <li><b>Pas de « meilleure école » imposée.</b> Chaque enfant est différent ; nous vous donnons les moyens de choisir selon vos critères.</li>
+        <li><b>Gratuit et indépendant.</b> Pas de publicité, pas de revente de données, aucun intérêt commercial avec les établissements.</li>
+        <li><b>Transparent sur ses limites.</b> Quand une donnée n'existe pas, nous le disons plutôt que de combler le vide.</li>
+      </ul>
+    </div>
+    <div class="harc-card">
+      <h3>D'où viennent les données</h3>
+      <p>Les indicateurs (réussite au brevet, valeur ajoutée, IPS, effectifs, langues, éducation prioritaire) proviennent des bases ouvertes du <b>Ministère de l'Éducation nationale</b>, mises à jour à chaque rentrée. ÉcoleClaire ne fait que les agréger et les présenter clairement. Pour une information ponctuelle (places disponibles, projet pédagogique, tarifs), contactez directement l'établissement.</p>
+    </div>
+    <div class="harc-card">
+      <h3>Un projet en construction</h3>
+      <p>ÉcoleClaire est un projet jeune, amélioré au fil des retours des parents qui l'utilisent. Si vous repérez une erreur ou souhaitez suggérer une amélioration, vos retours sont précieux.</p>
+    </div>
+    <p style="font-size:.78rem;color:var(--soft);text-align:center;margin-top:6px">ÉcoleClaire est un service indépendant et gratuit. Données indicatives issues de sources officielles, à vérifier auprès des établissements.</p>
+  </div>
+</section>
+
+<!-- VIEW: FAQ -->
+<section class="view" id="v-faq">
+  <div class="wrap">
+    <h2 style="font-size:1.5rem;letter-spacing:-.02em;margin-bottom:6px">❓ Questions fréquentes</h2>
+    <p style="color:var(--soft);font-size:.98rem;margin-bottom:18px">Tout ce qu'il faut savoir sur ÉcoleClaire, ses données et ses limites — en toute transparence.</p>
+    <details class="faq-item"><summary>À quoi sert ÉcoleClaire ?</summary><div class="faq-a">ÉcoleClaire vous aide à trouver et comparer les écoles, collèges et lycées proches de chez vous, à partir des données officielles de l'Éducation nationale. Vous entrez votre ville ou adresse, vous voyez les établissements sur une carte avec leurs vrais indicateurs (réussite, mixité, encadrement, langues, options…), et vous comparez selon vos critères.</div></details><details class="faq-item"><summary>C'est gratuit ?</summary><div class="faq-a">Oui, entièrement gratuit. Pas de compte obligatoire, pas de publicité, pas de revente de vos données.</div></details><details class="faq-item"><summary>D'où viennent les données ?</summary><div class="faq-a">Des bases publiques officielles, principalement de l'Éducation nationale (rentrée 2024) : résultats au brevet, indice de position sociale (IPS), valeur ajoutée, effectifs, langues, sections, éducation prioritaire. Vérifiables et mises à jour chaque année. ÉcoleClaire n'invente aucun chiffre.</div></details><details class="faq-item"><summary>En quoi est-ce mieux que ChatGPT ?</summary><div class="faq-a">Trois différences : <b>la fiabilité</b> — une IA généraliste peut inventer des chiffres ou des classements, ÉcoleClaire s'appuie uniquement sur des données officielles ; <b>la proximité réelle</b> — distance et temps de trajet exacts depuis votre adresse, sur une carte ; et le fait qu'ÉcoleClaire ne prétend pas désigner « la meilleure école », car elle n'existe pas.</div></details><details class="faq-item"><summary>Quelle est la meilleure école près de chez moi ?</summary><div class="faq-a">Il n'y a pas de réponse universelle. La « meilleure » dépend de votre enfant et de vos priorités : proximité, résultats, petites classes, mixité, langue, ambiance. Une école idéale pour un enfant timide n'est pas la même que pour un enfant qui s'ennuie. ÉcoleClaire ne vous impose pas un verdict : il vous donne les informations pour trouver VOTRE meilleure école.</div></details><details class="faq-item"><summary>C'est quoi l'IPS ?</summary><div class="faq-a">L'Indice de Position Sociale reflète le milieu social des familles (échelle ~50 à 150). Ce n'est pas une note de qualité, c'est un repère de mixité. Un IPS modéré avec une bonne valeur ajoutée signale souvent une école qui fait progresser ses élèves. Regardez les deux ensemble.</div></details><details class="faq-item"><summary>C'est quoi la « valeur ajoutée » ?</summary><div class="faq-a">Elle compare les résultats réels aux résultats attendus vu le profil des élèves. Une valeur positive (+) signifie que l'établissement fait mieux qu'attendu : il fait progresser ses élèves. Souvent plus parlant que le taux de réussite brut.</div></details><details class="faq-item"><summary>Pourquoi pas de résultats pour les écoles primaires/maternelles ?</summary><div class="faq-a">Parce qu'ils n'existent pas publiquement par école : c'est un choix de l'État de ne pas classer les écoles du premier degré. Les évaluations CP/CE1 ne sont publiées qu'au niveau départemental. ÉcoleClaire affiche donc ce qui existe vraiment : encadrement, mixité, taille, éducation prioritaire, accueil des moins de 3 ans.</div></details><details class="faq-item"><summary>Pourquoi pas d'avis de parents ?</summary><div class="faq-a">ÉcoleClaire n'héberge pas d'avis : ils sont difficiles à vérifier et peuvent être manipulés. Nous préférons des données objectives. Vous pouvez consulter les avis Google depuis chaque fiche.</div></details><details class="faq-item"><summary>Pourquoi pas de photo des écoles ?</summary><div class="faq-a">Il n'existe pas de base publique et gratuite de photos d'écoles. Plutôt que des images non fiables ou payantes, nous utilisons une vignette illustrée par type d'établissement.</div></details><details class="faq-item"><summary>Comment connaître les frais d'une école privée ?</summary><div class="faq-a">Aucune base officielle ne publie ces tarifs : chaque établissement fixe ses prix. ÉcoleClaire affiche une fourchette indicative par niveau (privé sous contrat), à confirmer auprès de l'établissement. Le hors-contrat peut être bien plus cher.</div></details><details class="faq-item"><summary>Comment fonctionne le conseiller ?</summary><div class="faq-a">Il s'appuie sur les écoles trouvées autour de vous et vos favoris. Posez une question en langage naturel (« un collège proche avec une bonne réussite », « mon enfant est timide, je cherche une petite structure ») : il analyse les établissements réels et recommande ceux qui correspondent, en expliquant pourquoi. C'est une aide, pas un remplacement de votre jugement.</div></details><details class="faq-item"><summary>Mon enfant subit du harcèlement, que faire ?</summary><div class="faq-a">Une page dédiée propose les numéros officiels : 3018 (harcèlement, gratuit et anonyme) et 119 (enfance en danger). Toutes les écoles ont une équipe formée (programme pHARe). En cas de danger immédiat : 17 (police) ou 15 (SAMU). ÉcoleClaire ne traite pas les signalements.</div></details><details class="faq-item"><summary>Mes recherches et favoris sont-ils privés ?</summary><div class="faq-a">Oui. Vos favoris et préférences restent sur votre appareil. ÉcoleClaire ne crée pas de profil et ne partage rien.</div></details><details class="faq-item"><summary>Les données sont-elles toujours à jour ?</summary><div class="faq-a">Les données officielles sont mises à jour une fois par an, à la rentrée. Pour une info ponctuelle (place disponible, tarif exact), contactez l'établissement ou la mairie.</div></details>
+    <p style="font-size:.78rem;color:var(--soft);text-align:center;margin-top:18px">ÉcoleClaire s'appuie sur les données officielles de l'Éducation nationale. Données indicatives, à vérifier auprès des établissements.</p>
+  </div>
+</section>
+
+<!-- VIEW: HARCÈLEMENT -->
+<section class="view" id="v-harcelement">
+  <div class="wrap">
+    <h2 style="font-size:1.7rem;letter-spacing:-.02em;margin-bottom:6px">🛡️ Harcèlement scolaire</h2>
+    <p style="color:var(--soft);font-size:1.02rem;margin-bottom:20px">Si votre enfant est concerné, vous n'êtes pas seul·e. Des professionnels peuvent vous aider, gratuitement et en toute confidentialité.</p>
+
+    <div class="harc-urgent">
+      <h3>📞 Besoin d'aide maintenant</h3>
+      <a class="harc-num" href="tel:3018"><div class="big">3018</div><div><b>Harcèlement & cyberharcèlement</b><span>Gratuit, anonyme, confidentiel · 7j/7 de 9h à 23h</span></div></a>
+      <a class="harc-num" href="tel:119"><div class="big">119</div><div><b>Enfance en danger</b><span>Gratuit, 24h/24 · Allô Enfance en Danger</span></div></a>
+    </div>
+
+    <div class="harc-card">
+      <h3>🏫 Toutes les écoles ont un dispositif</h3>
+      <span class="harc-badge">Programme pHARe · 100 % des établissements</span>
+      <p>Depuis 2022, <b>chaque école et collège</b> (et les lycées depuis 2023) applique le programme national <b>pHARe</b>. Dans l'établissement de votre enfant, il existe :</p>
+      <ul class="harc-list">
+        <li>Une <b>équipe ressource</b> formée pour traiter les situations de harcèlement</li>
+        <li>Des <b>élèves ambassadeurs</b> contre le harcèlement</li>
+        <li>10 heures par an de sensibilisation, du CP à la Terminale</li>
+      </ul>
+    </div>
+
+    <div class="harc-card">
+      <h3>⚠️ Les signaux qui doivent alerter</h3>
+      <ul class="harc-list">
+        <li>Refus d'aller à l'école, maux de ventre ou de tête répétés le matin</li>
+        <li>Affaires abîmées ou « perdues », vêtements déchirés</li>
+        <li>Repli, irritabilité, troubles du sommeil ou de l'appétit</li>
+        <li>Baisse soudaine des résultats, évitement des réseaux sociaux</li>
+      </ul>
+    </div>
+
+    <div class="harc-card">
+      <h3>✅ Que faire, étape par étape</h3>
+      <ol class="harc-steps">
+        <li>Écouter l'enfant sans dramatiser ni minimiser, le rassurer : il n'y est pour rien.</li>
+        <li>Noter les faits (dates, lieux, personnes, captures d'écran si cyber).</li>
+        <li>Contacter le directeur / chef d'établissement — il a l'obligation d'agir.</li>
+        <li>Appeler le 3018 pour être conseillé et accompagné.</li>
+      </ol>
+    </div>
+
+    <p style="font-size:.82rem;color:var(--soft);text-align:center;margin-top:18px">ÉcoleClaire ne traite pas les signalements et n'héberge aucune donnée personnelle. En cas de danger immédiat, composez le 17 (police) ou le 15 (SAMU).</p>
+  </div>
+</section>
+
+<!-- VIEW: DATA / ENRICHISSEMENT -->
+<section class="view" id="v-data">
+  <div class="wrap adm">
+    <h2>🛠 Données & enrichissement</h2>
+    <p class="sub">Téléchargez et fusionnez les critères manquants directement depuis l'API Éducation nationale, puis exportez le fichier enrichi.</p>
+    <div class="dband">⚠️ Cette page fonctionne uniquement en ligne (depuis Netlify), car elle télécharge les données officielles en direct.</div>
+
+    <div class="upl">
+      <div style="font-weight:700;font-size:.9rem">Fichier de base : ecoles-france.json</div>
+      <div class="ds" id="base-status" style="color:var(--soft);font-size:.8rem;margin:6px 0">Chargement…</div>
+      <input type="file" id="base-file" accept=".json" onchange="App.loadBaseFile(event)"/>
+    </div>
+
+    <div id="dlist"></div>
+
+    <button class="dbtn" id="enrich-btn" onclick="App.enrichAll()">⬇️ Télécharger & fusionner tous les critères manquants</button>
+    <button class="dbtn" id="creche-btn" onclick="App.importCreches()" style="background:#0EA5A4">🍼 Importer les crèches (CNAF)</button>
+    <button class="dbtn dl hidden" id="dl-btn" onclick="App.downloadEnriched()">💾 Télécharger ecoles-france.json enrichi</button>
+    <div class="dlog hidden" id="dlog"></div>
+  </div>
+</section>
+
+<!-- Compare bar + modal + FAB -->
+<div class="cbar" id="cbar"><b id="ccount">0 école</b><button class="cbar-share" onclick="App.shareCompare()" title="Partager la sélection">🔗</button><button onclick="App.openCompare()">Comparer ⚖</button></div>
+<nav class="bnav">
+  <button class="bn on" data-nav="home" onclick="App.go('home')"><span class="ic">🔍</span>Découvrir</button>
+  <button class="bn" data-nav="favoris" onclick="App.go('favoris')"><span class="ic">❤️</span>Favoris</button>
+</nav>
+<button class="helpfab" id="helpfab" onclick="App.go('advisor')">💬 Besoin d'aide ?</button>
+<div class="modal" id="modal"><div class="mi"><div class="mh"><h3 id="modal-t">⚖ Comparateur</h3><button class="menu-x" onclick="App.closeModal()">×</button></div><div id="modal-c"></div></div></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ============================================================
+// ÉcoleClaire — Single File App
+// Parcours parent + enrichissement données (téléchargement direct ODS)
+// ============================================================
+
+// ── Registre des datasets (depuis V205.9) ──────────────────
+var ODS = 'https://data.education.gouv.fr/api/explore/v2.1/catalog/datasets/';
+var ODS_CAF = 'https://data.caf.fr/api/explore/v2.1/catalog/datasets/';
+// Évaluations nationales CP/CE1 par DÉPARTEMENT (contexte, pas par école — non publié par école)
+var DEPT_EVAL = [
+  {ds:'fr-en-evaluations_nationales_cp_departement', target:'depCP', label:'Repère départemental CP'},
+  {ds:'fr-en-evaluations_nationales_ce1_departement', target:'depCE1', label:'Repère départemental CE1'}
+];
+// Datasets crèches CNAF (géolocalisés). Noms de champs tolérants (variantes selon millésime).
+var CRECHE_DS = [
+  {ds:'adresse-des-etablissements-d-accueil-du-jeune-enfant-percevant', label:'Crèches CNAF (adresses + places)'}
+];
+var ANUAI=['identifiant_de_l_etablissement','numero_uai'];
+var ANSEL=''; // plus de select sur annuaire : endpoint /exports rejette les select multi-champs (400). On telecharge tout (cache) et on lit cote client.
+var DATASETS = [
+  {key:'ips_ecoles',label:'IPS écoles',ds:'fr-en-ips-ecoles-ap2022',uai:['uai','numero_uai','numero_uai_ecole'],val:['ips','ips_ensemble_des_eleves'],target:'ips',applies:['Ecole'],tf:'round'},
+  {key:'ips_colleges',label:'IPS collèges',ds:'fr-en-ips-colleges-ap2022',uai:['uai','numero_uai','numero_uai_college'],val:['ips','ips_ensemble_des_eleves'],target:'ips',applies:['Collège'],tf:'round'},
+  {key:'ips_lycees',label:'IPS lycées',ds:'fr-en-ips-lycees-ap2022',uai:['uai','numero_uai','numero_uai_lycee'],val:['ips','ips_ensemble_gt_pro','ips_voie_gt','ips_ensemble','ips_ensemble_des_eleves'],target:'ips',applies:['Lycée'],tf:'round'},
+  {key:'rep',label:'REP / REP+',ds:'fr-en-ecoles-ep',uai:['uai','numero_uai'],val:['reseau2','appartep','zonage3'],target:'rep',applies:['Ecole','Collège'],tf:'rep'},
+  {key:'rep_colleges',label:'REP collèges (annuaire)',ds:'fr-en-annuaire-education',uai:['identifiant_de_l_etablissement','numero_uai'],val:['appartenance_education_prioritaire','type_zone'],target:'rep',applies:['Collège'],tf:'rep'},
+  {key:'langues',label:'Langues collèges (LV1/LV2)',ds:'fr-en-college-effectifs-niveau-sexe-lv',uai:['numero_college','uai'],val:[],target:'lv1',applies:['Collège'],tf:'langues'},
+  {key:'dnb',label:'Réussite DNB',ds:'fr-en-dnb-par-etablissement',uai:['numero_d_etablissement','numero_etablissement','uai'],val:['taux_de_reussite','taux_reussite_ensemble'],target:'reussite',applies:['Collège'],tf:'float'},
+  {key:'ivac',label:'Valeur ajoutée (IVAC)',ds:'fr-en-indicateurs-valeur-ajoutee-colleges',uai:['uai'],val:['va_du_taux_de_reussite_g','taux_d_acces_6eme_3eme'],target:'va',applies:['Collège'],tf:'float'},
+  {key:'dnb_mention',label:'Mentions au brevet (collège)',ds:'fr-en-dnb-par-etablissement',uai:['numero_d_etablissement','numero_etablissement','uai'],val:['taux_de_mention','part_mentions','taux_mentions_ensemble'],target:'mention',applies:['Collège'],tf:'float'},
+  // ── LYCÉES : IVAL général/techno + professionnel (réussite, VA, taux d'accès, mentions) ──
+  {key:'ival_gt_reussite',label:'Réussite bac (lycées GT)',ds:'fr-en-indicateurs-de-resultat-des-lycees-denseignement-general-et-technologique',uai:['uai','numero_d_etablissement','etablissement'],val:['taux_de_reussite_brut_total_series','taux_brut_de_reussite_total_series','taux_de_reussite_total_series','taux_reussite_brut'],target:'reussite',applies:['Lycée'],tf:'float',keep:true},
+  {key:'ival_gt_va',label:'Valeur ajoutée bac (lycées GT)',ds:'fr-en-indicateurs-de-resultat-des-lycees-denseignement-general-et-technologique',uai:['uai','numero_d_etablissement','etablissement'],val:['va_du_taux_de_reussite_total_series','valeur_ajoutee_du_taux_de_reussite_total_series','va_reussite_total'],target:'va',applies:['Lycée'],tf:'float',keep:true},
+  {key:'ival_gt_acces',label:'Taux d\'accès bac (lycées GT)',ds:'fr-en-indicateurs-de-resultat-des-lycees-denseignement-general-et-technologique',uai:['uai','numero_d_etablissement','etablissement'],val:['taux_d_acces_2nde_bac','taux_acces_2nde_terminale','taux_d_acces_brut_2nde_bac'],target:'txAcces',applies:['Lycée'],tf:'float',keep:true},
+  {key:'ival_gt_mention',label:'Mentions bac (lycées GT)',ds:'fr-en-indicateurs-de-resultat-des-lycees-denseignement-general-et-technologique',uai:['uai','numero_d_etablissement','etablissement'],val:['taux_de_mentions_total_series','part_mentions','taux_mentions'],target:'mention',applies:['Lycée'],tf:'float',keep:true},
+  {key:'ival_pro_reussite',label:'Réussite bac (lycées Pro)',ds:'fr-en-indicateurs-de-resultat-des-lycees-denseignement-professionnels',uai:['uai','numero_d_etablissement','etablissement'],val:['taux_de_reussite_brut_total','taux_brut_de_reussite_total_secteurs','taux_de_reussite_total'],target:'reussite',applies:['Lycée'],tf:'float',keep:true},
+  {key:'ival_pro_va',label:'Valeur ajoutée bac (lycées Pro)',ds:'fr-en-indicateurs-de-resultat-des-lycees-denseignement-professionnels',uai:['uai','numero_d_etablissement','etablissement'],val:['va_du_taux_de_reussite_total','valeur_ajoutee_du_taux_de_reussite_total'],target:'va',applies:['Lycée'],tf:'float',keep:true},
+  // ── 1er degré (maternelles + élémentaires) — max de données ──
+  {key:'eff_ecoles',label:'Effectifs écoles (élèves + classes)',ds:'fr-en-ecoles-effectifs-nb_classes',where:'rentree_scolaire',uai:['numero_ecole','numero_de_l_ecole','uai'],val:['nombre_total_eleves','nombre_total_d_eleves','nombre_d_eleves','total_eleves'],target:'totalEleves',applies:['Ecole'],tf:'round'},
+  {key:'classes_ecoles',label:'Nombre de classes écoles',ds:'fr-en-ecoles-effectifs-nb_classes',where:'rentree_scolaire',uai:['numero_ecole','numero_de_l_ecole','uai'],val:[],target:'nbClasses',applies:['Ecole'],tf:'classes'},
+  {key:'mat_eleves',label:'Effectifs maternelle (préélémentaire)',ds:'fr-en-ecoles-effectifs-nb_classes',where:'rentree_scolaire',uai:['numero_ecole','numero_de_l_ecole','uai'],val:['nombre_eleves_preelementaire_hors_ulis','nombre_eleves_preelementaire','nombre_d_eleves_preelementaire'],target:'matEleves',applies:['Ecole'],tf:'round'},
+  // ── Annuaire : 1 seul téléchargement (cache + select) → 12 critères ──
+  {key:'an_cantine',label:'Cantine (annuaire, complète les manques)',ds:'fr-en-annuaire-education',uai:ANUAI,val:['restauration'],target:'opt.cantine',applies:['Ecole','Collège','Lycée'],tf:'flag',keep:true},
+  {key:'an_internat',label:'Internat',ds:'fr-en-annuaire-education',uai:ANUAI,val:['hebergement'],target:'opt.internat',applies:['Collège','Lycée'],tf:'flag'},
+  {key:'an_ulis',label:'ULIS (annuaire, complète)',ds:'fr-en-annuaire-education',uai:ANUAI,val:['ulis'],target:'opt.ulis',applies:['Ecole','Collège','Lycée'],tf:'flag',keep:true},
+  {key:'an_segpa',label:'SEGPA (annuaire, complète)',ds:'fr-en-annuaire-education',uai:ANUAI,val:['segpa'],target:'opt.segpa',applies:['Collège'],tf:'flag',keep:true},
+  {key:'an_appr',label:'Apprentissage',ds:'fr-en-annuaire-education',uai:ANUAI,val:['apprentissage'],target:'opt.appr',applies:['Lycée'],tf:'flag'},
+  {key:'an_sport',label:'Section sport',ds:'fr-en-annuaire-education',uai:ANUAI,val:['section_sport'],target:'opt.sport',applies:['Collège','Lycée'],tf:'flag'},
+  {key:'an_arts',label:'Section arts',ds:'fr-en-annuaire-education',uai:ANUAI,val:['section_arts'],target:'opt.arts',applies:['Collège','Lycée'],tf:'flag'},
+  {key:'an_cinema',label:'Section cinéma',ds:'fr-en-annuaire-education',uai:ANUAI,val:['section_cinema'],target:'opt.cinema',applies:['Collège','Lycée'],tf:'flag'},
+  {key:'an_theatre',label:'Section théâtre',ds:'fr-en-annuaire-education',uai:ANUAI,val:['section_theatre'],target:'opt.theatre',applies:['Collège','Lycée'],tf:'flag'},
+  {key:'an_inter',label:'Section internationale',ds:'fr-en-annuaire-education',uai:ANUAI,val:['section_internationale'],target:'opt.sectionInter',applies:['Collège','Lycée'],tf:'flag'},
+  {key:'an_euro',label:'Section européenne',ds:'fr-en-annuaire-education',uai:ANUAI,val:['section_europeenne'],target:'opt.sectionEuro',applies:['Collège','Lycée'],tf:'flag'},
+  {key:'eff_col',label:'Effectifs collèges',ds:'fr-en-college-effectifs-niveau-sexe-lv',where:'rentree_scolaire',uai:['numero_college','uai'],val:[],target:'totalEleves',applies:['Collège'],tf:'sumeleves'},
+  {key:'eff_lyc_gt',label:'Effectifs lycées (général/techno)',ds:'fr-en-lycee_gt-effectifs-niveau-sexe-lv',where:'rentree_scolaire',uai:['numero_lycee','uai'],val:[],target:'totalEleves',applies:['Lycée'],tf:'sumeleves'},
+  {key:'eff_lyc_pro',label:'Effectifs lycées (professionnel)',ds:'fr-en-lycee_pro-effectifs-niveau-sexe-lv',where:'rentree_scolaire',uai:['numero_lycee','uai'],val:[],target:'totalEleves',applies:['Lycée'],tf:'sumeleves',keep:true},
+  {key:'an_soustype',label:'Maternelle / Élémentaire (complète sousType)',ds:'fr-en-annuaire-education',uai:ANUAI,val:[],target:'sousType',applies:['Ecole'],tf:'subtype',keep:true},
+  {key:'an_web',label:'Site internet (annuaire)',ds:'fr-en-annuaire-education',uai:ANUAI,val:['site_internet','web','adresse_site_internet','url'],target:'web',applies:['Ecole','Collège','Lycée'],tf:'web'}
+];
+
+// ── UAI normalization (PATCH A V206.1) ─────────────────────
+function normUAI(v){ return String(v||'').trim().toUpperCase().replace(/\s+/g,''); }
+function pick(row, fields){ for(var i=0;i<fields.length;i++){ if(row[fields[i]]!=null && row[fields[i]]!=='') return row[fields[i]]; } return null; }
+
+var App = {
+  all:[], results:[], home:null, map:null, markers:[], sel:null,
+  filters:{level:'',statut:[],svc:[],lang:[],rep:[],radius:10}, compare:[], enriched:null,
+
+  async boot(){
+    // localStorage (favoris + profil) — OK sur Netlify
+    this.favs = JSON.parse(localStorage.getItem('ec_favs')||'[]');
+    this.profile = JSON.parse(localStorage.getItem('ec_profile')||'{}');
+    // Charger le dataset de base
+    try{
+      var r = await fetch('ecoles-france.json');
+      if(r.ok){ this.all = this.expandSchools(await r.json()); this.setBaseStatus(this.all.length+' établissements chargés ✅'); if(this.all.some(function(s){return s.totalEleves!=null&&s.nbClasses;}))document.getElementById('chip-petites').classList.remove('hidden');
+      if(this.all.some(function(s){return s.opt&&(s.opt.internat||s.opt.sectionEuro);}))document.querySelectorAll('.chip-an').forEach(function(c){c.classList.remove('hidden');}); }
+      else throw 0;
+    }catch(e){ this.setBaseStatus('Non trouvé — chargez-le manuellement ci-dessous',true); }
+    // Bind chips
+    document.querySelectorAll('.chip').forEach(function(c){ c.addEventListener('click',function(){ App.toggleChip(c); }); });
+    document.querySelectorAll('.ck').forEach(function(c){ c.addEventListener('click',function(){ App.toggleCk(c); }); });
+    this.bindAutocomplete();
+    document.getElementById('adv-in').addEventListener('keydown',function(e){ if(e.key==='Enter') App.advise(); });
+    this.renderDataList();
+    var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){App.fixMapSize();},150);});
+    window.addEventListener('orientationchange',function(){setTimeout(function(){App.fixMapSize();},250);});
+    var last=null; try{last=JSON.parse(localStorage.getItem('ec_lastsearch')||'null');}catch(e){}
+    if(last&&last.label){var qi=document.getElementById('q');if(qi&&!qi.value)qi.value=last.label;}
+  },
+
+  // ── Navigation ────────────────────────────────────────────
+
+  go(view){
+    document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('on'); });
+    var el=document.getElementById('v-'+view); if(el) el.classList.add('on');
+    document.querySelectorAll('[data-nav]').forEach(function(n){ n.classList.toggle('on', n.dataset.nav===view); });
+    window.scrollTo(0,0);
+    if(view==='home'){
+      // Retour accueil propre : on cache les résultats, on rouvre le bloc de recherche
+      document.getElementById('resbar').classList.add('hidden');
+      document.getElementById('layout').classList.add('hidden');
+      document.getElementById('qf-wrap').classList.remove('hidden');
+      if(!this.home) document.getElementById('welcome').classList.remove('hidden');
+    }
+    if(view==='favoris') this.renderFavs();
+    this.updateHelp();
+  },
+  // Advisor visible UNIQUEMENT après engagement (favoris / comparaison / fiche)
+  engaged:false,
+  updateHelp(){
+    var show=this.favs.length>0||this.compare.length>0||this.engaged;
+    document.getElementById('helpfab').classList.toggle('show',show);
+    document.getElementById('help-top').classList.toggle('hidden',!show);
+  },
+
+  // ── Géocodage + recherche ─────────────────────────────────
+  // ── Autocomplétion d'adresses (API BAN api-adresse.data.gouv.fr) ──
+  acIndex:-1, acItems:[], _acTimer:null,
+  bindAutocomplete(){
+    var q=document.getElementById('q'), self=this;
+    q.addEventListener('input',function(){
+      var v=q.value.trim();
+      clearTimeout(self._acTimer);
+      if(v.length<3){ self.acClose(); return; }
+      self._acTimer=setTimeout(function(){ self.acFetch(v); },220);
+    });
+    q.addEventListener('keydown',function(e){
+      var open=document.getElementById('ac-list').classList.contains('on');
+      if(e.key==='ArrowDown'&&open){ e.preventDefault(); self.acMove(1); }
+      else if(e.key==='ArrowUp'&&open){ e.preventDefault(); self.acMove(-1); }
+      else if(e.key==='Enter'){
+        if(open&&self.acIndex>=0){ e.preventDefault(); self.acPick(self.acIndex); }
+        else { self.acClose(); self.search(); }
+      }
+      else if(e.key==='Escape'){ self.acClose(); }
+    });
+    document.addEventListener('click',function(e){ if(!e.target.closest('.ac-wrap')) self.acClose(); });
+  },
+  async acFetch(v){
+    try{
+      var r=await fetch('https://api-adresse.data.gouv.fr/search/?limit=6&q='+encodeURIComponent(v));
+      var j=await r.json();
+      this.acItems=(j.features||[]).map(function(f){
+        return {label:f.properties.label, ctx:f.properties.context||'', lat:f.geometry.coordinates[1], lon:f.geometry.coordinates[0]};
+      });
+      this.acRender();
+    }catch(e){ this.acClose(); }
+  },
+  acRender(){
+    var ul=document.getElementById('ac-list'), q=document.getElementById('q');
+    if(!this.acItems.length){ this.acClose(); return; }
+    this.acIndex=-1;
+    ul.innerHTML=this.acItems.map(function(it,i){
+      return '<li class="ac-item" role="option" data-i="'+i+'" onclick="App.acPick('+i+')"><span class="ic">📍</span><span>'+App.esc(it.label)+'</span><span class="ctx">'+App.esc(it.ctx)+'</span></li>';
+    }).join('');
+    ul.classList.add('on'); q.setAttribute('aria-expanded','true');
+  },
+  acMove(d){
+    var items=document.querySelectorAll('#ac-list .ac-item'); if(!items.length)return;
+    this.acIndex=(this.acIndex+d+items.length)%items.length;
+    items.forEach(function(el,i){ el.classList.toggle('hl', i===App.acIndex); });
+    items[this.acIndex].scrollIntoView({block:'nearest'});
+  },
+  acPick(i){
+    var it=this.acItems[i]; if(!it)return;
+    document.getElementById('q').value=it.label;
+    this.acClose();
+    this.home={lat:it.lat, lon:it.lon, label:it.label};
+    try{localStorage.setItem('ec_lastsearch',JSON.stringify({label:it.label}));}catch(e){}
+    this.enterResults();
+  },
+  acClose(){ var ul=document.getElementById('ac-list'); if(ul){ul.classList.remove('on');ul.innerHTML='';} this.acIndex=-1; var q=document.getElementById('q'); if(q)q.setAttribute('aria-expanded','false'); },
+
+  async geocode(q){
+    try{
+      var r=await fetch('https://api-adresse.data.gouv.fr/search/?limit=1&q='+encodeURIComponent(q));
+      var j=await r.json(); var f=j.features&&j.features[0];
+      if(f) return {lat:f.geometry.coordinates[1],lon:f.geometry.coordinates[0],label:f.properties.label};
+    }catch(e){}
+    return null;
+  },
+  dist(a,b,c,d){var R=6371,x=(c-a)*Math.PI/180,y=(d-b)*Math.PI/180,z=Math.sin(x/2)*Math.sin(x/2)+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(y/2)*Math.sin(y/2);return R*2*Math.atan2(Math.sqrt(z),Math.sqrt(1-z));},
+
+  // Recherche par texte (mène à la MÊME vue résultats que tout le reste)
+  async search(){
+    var q=document.getElementById('q').value.trim(); if(!q) return;
+    if(!this.all.length){ alert('Données non chargées. Ouvrez depuis Netlify ou chargez le fichier dans Données.'); return; }
+    var g=await this.geocode(q)||{lat:48.97,lon:2.31,label:q};
+    this.home=g;
+    try{localStorage.setItem('ec_lastsearch',JSON.stringify({label:g.label}));}catch(e){}
+    this.enterResults();
+  },
+
+  // Ouvre la vue résultats (carte + liste). showFilters=true ouvre le panneau de filtres.
+  openResults(showFilters){
+    this.enterResults();
+    if(showFilters){ this.toggleFilters(true); }
+  },
+
+  // Bascule unique vers l'écran résultats — carte TOUJOURS présente, que la recherche soit simple ou filtrée
+  enterResults(){
+    document.getElementById('welcome').classList.add('hidden');
+    document.getElementById('qf-wrap').classList.add('hidden');
+    document.getElementById('resbar').classList.remove('hidden');
+    document.getElementById('layout').classList.remove('hidden');
+    document.getElementById('resloc').textContent = this.home ? '📍 '+this.home.label : 'Indiquez une ville ou utilisez 📍 pour voir la carte et classer par distance';
+    this.applyFilterLayout();
+    if(this.home){ this.initMap(); }
+    else { document.getElementById('map').innerHTML='<div class="state" style="display:grid;place-items:center;height:100%;padding:20px;text-align:center"><div><div class="i">🗺️</div><p>La carte s\'affiche dès que vous indiquez un lieu.</p></div></div>'; }
+    this.render();
+    document.getElementById('resbar').scrollIntoView({behavior:'smooth',block:'start'});
+  },
+
+  // Ouvre/ferme le panneau de filtres (même bouton dans tous les cas)
+  toggleFilters(force){
+    var fp=document.getElementById('filters');
+    var open = force===true ? true : (force===false ? false : fp.classList.contains('collapsed'));
+    fp.classList.toggle('collapsed', !open);
+    document.getElementById('filt-btn').classList.toggle('active', open);
+    this.applyFilterLayout();
+  },
+  applyFilterLayout(){
+    var hidden=document.getElementById('filters').classList.contains('collapsed');
+    document.getElementById('layout').classList.toggle('nofilters', hidden);
+    var btn=document.getElementById('filt-btn'); if(btn)btn.classList.toggle('active', !hidden);
+    if(this.map)setTimeout(function(){App.map.invalidateSize();},120);
+    this.updateFilterBadge();
+  },
+  updateFilterBadge(){
+    var ff=this.filters;
+    var n=(ff.level?1:0)+(ff.statut?ff.statut.length:0)+(ff.svc?ff.svc.length:0)+(ff.lang?ff.lang.length:0)+(ff.rep?ff.rep.length:0);
+    var bb=document.getElementById('filt-badge'); if(bb){bb.textContent=n;bb.classList.toggle('hidden',n===0);}
+    return;
+  },
+
+  geoSearch(){
+    var self=this;
+    if(!navigator.geolocation){alert('La géolocalisation n\u2019est pas disponible sur cet appareil \u2014 saisissez votre ville.');return;}
+    if(!this.all.length){alert('Données non chargées. Ouvrez depuis Netlify ou chargez le fichier dans Données.');return;}
+    var q=document.getElementById('q'),ph=q.value;q.value='📍 Localisation en cours…';
+    navigator.geolocation.getCurrentPosition(async function(pos){
+      var lat=pos.coords.latitude,lon=pos.coords.longitude,label='Ma position';
+      try{
+        var r=await fetch('https://api-adresse.data.gouv.fr/reverse/?lat='+lat+'&lon='+lon);
+        var d=await r.json();
+        if(d.features&&d.features[0])label=d.features[0].properties.label;
+      }catch(e){}
+      q.value=label;
+      self.home={lat:lat,lon:lon,label:label};
+      try{localStorage.setItem('ec_lastsearch',JSON.stringify({label:label}));}catch(e){}
+      self.enterResults();
+    },function(err){
+      q.value=ph;
+      alert(err.code===1?'Autorisez la localisation dans les réglages de votre navigateur, ou saisissez votre ville.':'Position introuvable \u2014 saisissez votre ville.');
+    },{enableHighAccuracy:true,timeout:10000,maximumAge:60000});
+  },
+
+  resetFilters(){
+    this.filters.level='';this.filters.statut=[];this.filters.svc=[];this.filters.lang=[];this.filters.rep=[];
+    document.querySelectorAll('#filters .chip.on').forEach(function(c){if(c.dataset.g!=='radius')c.classList.remove('on');});
+    document.querySelectorAll('#filters .ck.on').forEach(function(c){c.classList.remove('on');});
+    this.applyLevelFilters();
+    this.updateFilterBadge();
+    if(this.home)this.render();
+  },
+
+  toggleCk(c){
+    var g=c.dataset.g, v=c.dataset.v, arr=this.filters[g];
+    if(!Array.isArray(arr)){ arr=this.filters[g]=[]; }
+    var i=arr.indexOf(v);
+    if(i>=0){ arr.splice(i,1); c.classList.remove('on'); } else { arr.push(v); c.classList.add('on'); }
+    this.updateFilterBadge();
+    if(this.home) this.render();
+  },
+
+  // Affiche/masque les sections de filtres selon le niveau choisi (contextuel)
+  applyLevelFilters(){
+    var lv=this.filters.level;
+    var is1d = lv==='maternelle'||lv==='elementaire';
+    var is2d = lv==='college'||lv==='lycee';
+    var none = !lv;
+    document.querySelectorAll('.flt-1d').forEach(function(el){ el.classList.toggle('hidden', !(is1d||none)); });
+    document.querySelectorAll('.flt-2d').forEach(function(el){ el.classList.toggle('hidden', !(is2d||none)); });
+  },
+
+  toggleChip(c){
+    var g=c.dataset.g,v=c.dataset.v;
+    if(g==='svc'){ var i=this.filters.svc.indexOf(v); if(i>=0){this.filters.svc.splice(i,1);c.classList.remove('on');}else{this.filters.svc.push(v);c.classList.add('on');} }
+    else{ var sib=c.parentElement.querySelectorAll('.chip'); if(g==='radius'){sib.forEach(function(s){s.classList.remove('on');});this.filters.radius=+v;c.classList.add('on');}
+      else if(this.filters[g]===v){this.filters[g]='';c.classList.remove('on');} else{sib.forEach(function(s){s.classList.remove('on');});this.filters[g]=v;c.classList.add('on');} }
+    // Sync l'état visuel entre les chips niveau de l'accueil et celles du panneau
+    if(g==='level'){document.querySelectorAll('.chip[data-g="level"]').forEach(function(x){x.classList.toggle('on', App.filters.level && x.dataset.v===App.filters.level);});this.applyLevelFilters();}
+    this.updateFilterBadge();
+    // Clic depuis l'accueil (résultats pas encore ouverts) → on bascule sur la vue résultats
+    if(document.getElementById('layout').classList.contains('hidden')){ this.enterResults(); }
+    else if(this.home){ this.render(); }
+  },
+
+  filtered(){
+    var f=this.filters,h=this.home,self=this;
+    var tm={maternelle:'Ecole',elementaire:'Ecole',college:'Collège',lycee:'Lycée'};
+    var sm={maternelle:'Maternelle',elementaire:'Élémentaire'};
+    var rows=this.all.filter(function(s){
+      if(!s.nom) return false;
+      if(f.level&&tm[f.level]&&s.type!==tm[f.level]) return false;
+      if(sm[f.level]){var st=(s.sousType||'').toLowerCase();if(st!==sm[f.level].toLowerCase()&&st.replace(/é/g,'e')!==sm[f.level].toLowerCase().replace(/é/g,'e'))return false;}
+      if(f.statut&&f.statut.length&&!f.statut.some(function(st){return (s.statut||'').indexOf(st)>=0;})) return false;
+      if(f.svc.length){var o=s.opt||{};if(!f.svc.every(function(x){if(x==='petites')return s.totalEleves!=null&&s.nbClasses&&(s.totalEleves/s.nbClasses)<=22;return o[x];}))return false;}
+      if(f.lang&&f.lang.length&&!f.lang.some(function(lg){return String(s.lv1||'').toLowerCase().indexOf(lg.toLowerCase())>=0;})) return false;
+      if(f.rep&&f.rep.length){var isRep=!!s.rep;if(f.rep.indexOf('rep')>=0&&f.rep.indexOf('hors')<0&&!isRep)return false;if(f.rep.indexOf('hors')>=0&&f.rep.indexOf('rep')<0&&isRep)return false;}
+      return true;
+    });
+    if(h){rows.forEach(function(s){if(s.lat&&s.lon)s._d=self.dist(h.lat,h.lon,s.lat,s.lon);});rows=rows.filter(function(s){return s._d!=null&&s._d<=f.radius;});}
+    var sort=document.getElementById('sort').value;
+    var ratio=function(s){return(s.totalEleves!=null&&s.nbClasses)?s.totalEleves/s.nbClasses:999;};
+    if(sort==='dist')rows.sort(function(a,b){return(a._d||999)-(b._d||999);});
+    else if(sort==='ips')rows.sort(function(a,b){return(b.ips||0)-(a.ips||0);});
+    else if(sort==='reussite')rows.sort(function(a,b){return(b.reussite||-1)-(a.reussite||-1);});
+    else if(sort==='va')rows.sort(function(a,b){return(parseFloat(b.va)||-99)-(parseFloat(a.va)||-99);});
+    else if(sort==='classe')rows.sort(function(a,b){return ratio(a)-ratio(b);});
+    else rows.sort(function(a,b){return(a.nom||'').localeCompare(b.nom||'');});
+    return rows;
+  },
+
+  render(){
+    if(!this.home){
+      document.getElementById('list').innerHTML='<div class="state"><div class="i">📍</div><p>Indiquez une ville, un code postal ou utilisez votre position pour afficher les écoles correspondant à vos critères.</p></div>';
+      document.getElementById('cnt').textContent='Filtres prêts';
+      return;
+    }
+    this.results=this.filtered();
+    var t=this.results.length, shown=Math.min(t,60);
+    var ff=this.filters;var nf=(ff.level?1:0)+(ff.statut?ff.statut.length:0)+ff.svc.length+(ff.lang?ff.lang.length:0)+(ff.rep?ff.rep.length:0);
+    document.getElementById('cnt').innerHTML = (t>60 ? shown+' écoles proches (sur '+t.toLocaleString('fr-FR')+')' : t.toLocaleString('fr-FR')+' écoles')
+      + (nf?' <button class="reset-f" onclick="App.resetFilters()">✕ '+nf+' filtre'+(nf>1?'s':'')+'</button>':'');
+    var list=document.getElementById('list');
+    if(!t){ list.innerHTML='<div class="state"><div class="i">🤔</div><p>Aucune école avec ces filtres. Élargissez le rayon.</p></div>'; this.drawMarkers(); return; }
+    list.innerHTML=this.results.slice(0,60).map(function(s,i){return App.card(s,i);}).join('');
+    list.querySelectorAll('.card').forEach(function(c){
+      var u=c.dataset.uai;
+      c.querySelector('.see').addEventListener('click',function(e){e.stopPropagation();App.openSchool(u);});
+      c.querySelector('.cmp').addEventListener('click',function(e){e.stopPropagation();App.toggleCompare(u,c.querySelector('.cmp'));});
+      c.querySelector('.fav').addEventListener('click',function(e){e.stopPropagation();App.toggleFav(u,c.querySelector('.fav'));});
+      c.addEventListener('click',function(){App.openSchool(u);});
+    });
+    this.drawMarkers();
+  },
+
+  // 3 indicateurs prioritaires HORS mixité sociale (IPS), dans l'ordre de pertinence
+  // Explications « pour les parents » de chaque indicateur (chantier 4)
+  EXPL:{
+    "Taux d'accès":"Probabilité qu'un élève entré en seconde dans ce lycée obtienne son bac en y restant. Mesure la capacité du lycée à accompagner ses élèves jusqu'au bac, au-delà du simple taux de réussite.",
+    "Taux de mention":"Part des élèves reçus avec une mention (assez bien, bien ou très bien).",
+    "Taux d'encadrement":"Nombre moyen d'élèves par classe. Un effectif plus faible permet un suivi plus individualisé. La moyenne nationale en primaire est d'environ 22 élèves par classe.",
+    'Réussite':'Taux de réussite au brevet (DNB). Plus c\'est haut, mieux c\'est.',
+    'Valeur ajoutée':'Écart entre les résultats réels et ceux attendus vu le profil des élèves. Positif = l\'établissement fait progresser ses élèves au-delà des attentes.',
+    'Élèves/classe':'Nombre moyen d\'élèves par classe. Plus c\'est bas, plus l\'encadrement est individualisé.',
+    'Élèves':'Effectif total de l\'établissement.',
+    'Langue':'Première langue vivante enseignée.',
+    'Cantine':'Service de restauration sur place.',
+    'Périscolaire':'Accueil avant/après la classe (garderie, étude).',
+    'IPS (mixité sociale)':'Indice de position sociale : milieu social moyen des familles (50 à 150 environ). Ce n\'est PAS une note de qualité, mais un repère de mixité.'
+  },
+  // Indicateurs prioritaires selon le niveau (maternelle/élémentaire ≠ collège/lycée)
+  indicators(s){
+    var out=[],o=s.opt||{};
+    var prem=(s.sousType||s.type);
+    var estPrim = s.type==='Ecole';
+    if(estPrim){
+      // 1er degré : pas d'éval par école → on valorise les vrais signaux disponibles
+      if(s.totalEleves!=null&&s.nbClasses){
+        var ratio=Math.round(s.totalEleves/s.nbClasses);
+        out.push({v:ratio,k:'Élèves/classe'});
+      }
+      if(s.ips!=null)out.push({v:Math.round(s.ips),k:'IPS (mixité)'});
+      if(s.totalEleves!=null)out.push({v:s.totalEleves,k:'Élèves (école)'});
+      if(o.cantine&&out.length<3)out.push({v:'Oui',k:'Cantine'});
+      if(o.ulis&&out.length<3)out.push({v:'Oui',k:'ULIS'});
+    } else {
+      if(s.reussite!=null)out.push({v:s.reussite,u:'%',k:'Réussite'});
+      if(s.va!=null)out.push({v:(parseFloat(s.va)>=0?'+':'')+s.va,k:'Valeur ajoutée'});
+      if(s.totalEleves!=null&&s.nbClasses)out.push({v:Math.round(s.totalEleves/s.nbClasses),k:'Élèves/classe'});
+      if(s.lv1&&out.length<3)out.push({v:String(s.lv1).split(',')[0].trim(),k:'Langue'});
+      if(o.cantine&&out.length<3)out.push({v:'Oui',k:'Cantine'});
+    }
+    return out.slice(0,3);
+  },
+
+  // Temps de trajet estimé depuis la distance à vol d'oiseau (×1.3 routier)
+  trajet(km){
+    if(km==null)return '';
+    var r=km*1.3; // facteur détour réseau routier
+    var pied=Math.round(r/4.6*60); // 4.6 km/h à pied
+    var voit=Math.max(1,Math.round(r/26*60)); // 26 km/h en ville
+    if(km<=1.2)return '🚶 '+pied+' min à pied';
+    if(km<=4)return '🚗 '+voit+' min · 🚶 '+pied+' min';
+    return '🚗 '+voit+' min';
+  },
+  distLabel(km){ if(km==null)return ''; return km<1?Math.round(km*1000)+' m':km.toFixed(1).replace('.',',')+' km'; },
+
+  // Style de vignette par sous-type précis (dégradé + emoji) — pas de photo (inexistante en open data)
+  thumbStyle(s){
+    var t=s.type, sub=(s.sousType||'').toLowerCase(), priv=(s.statut||'').toLowerCase().indexOf('priv')>=0;
+    var g,ic;
+    if(t==='Collège'){ g='135deg,#5B8DEF,#3B6FD4'; ic='🏛'; }
+    else if(t==='Lycée'){
+      if(/pro/.test(sub)){ g='135deg,#0EA5A4,#0F766E'; ic='🔧'; }        // lycée pro
+      else if(/techno/.test(sub)){ g='135deg,#8B5CF6,#6D28D9'; ic='⚙️'; } // techno
+      else { g='135deg,#7C5BEF,#5B3BD4'; ic='🎓'; }                       // général
+    }
+    else if(sub.indexOf('matern')>=0){ g='135deg,#FBBF24,#F59E0B'; ic='🧸'; }   // maternelle
+    else if(sub.indexOf('élémentaire')>=0||sub.indexOf('elementaire')>=0){ g='135deg,#34D399,#059669'; ic='✏️'; } // élémentaire
+    else if(sub.indexOf('primaire')>=0){ g='135deg,#4FB286,#2E9E6B'; ic='🏫'; } // primaire
+    else { g='135deg,#60A5FA,#3B82F6'; ic='🏫'; }
+    if(priv) ic='⛪';  // privé : marqueur distinct, quel que soit le niveau
+    return {g:g, ic:ic};
+  },
+  thumb(s,big){
+    var st=this.thumbStyle(s);
+    var sz = big?'height:64px;font-size:30px;border-radius:12px' : 'width:48px;height:48px;font-size:22px;border-radius:10px;flex:0 0 auto';
+    return '<div class="thumb" style="background:linear-gradient('+st.g+');'+sz+'" aria-hidden="true">'+st.ic+'</div>';
+  },
+
+  typeLbl(s){var x=s.sousType||s.type;return {Maternelle:'🧒 Maternelle','Élémentaire':'📚 Élémentaire',Primaire:'🏫 Primaire',Ecole:'🏫 École','Collège':'🎓 Collège','Lycée':'🎓 Lycée'}[x]||x;},
+  badges(s){var o=s.opt||{},b=[];if(o.cantine)b.push(['bs','🍽 Cantine']);if(o.ulis)b.push(['bs','♿ ULIS']);if(o.segpa)b.push(['bs','📗 SEGPA']);if(o.lang||s.lv1)b.push(['bs','🌍 Langues']);if(o.sport)b.push(['bs','🏅 Sport']);if(o.arts)b.push(['bs','🎨 Arts']);if(o.internat)b.push(['bs','🛏 Internat']);if(o.sectionEuro)b.push(['bs','🇪🇺 Euro']);if(s.rep)b.push(['bt','⭐ '+s.rep]);if(s.totalEleves!=null&&s.nbClasses)b.push(['bi','👥 '+Math.round(s.totalEleves/s.nbClasses)+'/classe']);return b;},
+
+  card(s,i){
+    var priv=(s.statut||'').toLowerCase().indexOf('priv')>=0;
+    var d=s._d!=null?(s._d<1?Math.round(s._d*1000)+' m':s._d.toFixed(1)+' km'):'';
+    var inC=this.compare.indexOf(s.uai)>=0, isF=this.favs.indexOf(s.uai)>=0;
+    var medals=['🥇','🥈','🥉'];
+    var bd=this.badges(s).map(function(x){return '<span class="b '+x[0]+'">'+x[1]+'</span>';}).join('');
+    var _ts=this.thumbStyle(s); var thumbG=_ts.g; var imgIco=_ts.ic;
+    var allB=[['b',''+this.typeLbl(s)+' · '+(priv?'Privé':'Public')]];
+    this.badges(s).forEach(function(x){allB.push(['b',x[1]]);});
+    var bHtml=allB.slice(0,4).map(function(x){return '<span class="'+x[0]+'">'+x[1]+'</span>';}).join('');
+    return '<div class="card'+(this.sel===s.uai?' sel':'')+'" data-uai="'+s.uai+'">'+
+      '<div class="cimg" style="background:linear-gradient('+thumbG+')">'+imgIco+'</div><div class="cbody">'+
+      (i<3?'<div class="rk">★ Top '+(i+1)+'</div>':'')+
+      '<div class="ct"><div><div class="cn">'+this.esc(s.nom)+'</div><div class="cl">'+this.esc(s.commune)+(s._d!=null?' · '+App.trajet(s._d):'')+'</div></div>'+
+      '</div>'+
+      (function(){var ind=App.indicators(s);
+        // Jamais de carte vide : on garantit toujours ≥1 info utile (trajet + statut + 1er service)
+        if(ind.length<3){
+          var o=s.opt||{};
+          if(s._d!=null&&ind.length<3)ind.push({v:App.distLabel(s._d),k:'Distance'});
+          if(o.cantine&&!ind.some(function(x){return x.k==='Cantine';})&&ind.length<3)ind.push({v:'Oui',k:'Cantine'});
+          if(s.rep&&ind.length<3)ind.push({v:s.rep,k:'Éduc. prioritaire'});
+          if(ind.length<3)ind.push({v:(s.statut||'').toLowerCase().indexOf('priv')>=0?'Privé':'Public',k:'Statut'});
+        }
+        return '<div class="kpis">'+ind.slice(0,3).map(function(x){return '<div class="kpi"><div class="v">'+x.v+(x.u?'<span class="u">'+x.u+'</span>':'')+'</div><div class="k">'+x.k+'</div></div>';}).join('')+'</div>';
+      })()+
+      '<div class="bd">'+bHtml+'</div>'+
+      '<div class="ca"><button class="cmp'+(inC?' on':'')+'">'+(inC?'✓ Sélectionné':'Comparer')+'</button><button class="see">Voir</button><button class="fav'+(isF?' on':'')+'">'+(isF?'❤️':'♡')+'</button></div></div></div>';
+  },
+
+  // Décompresse le JSON (clés courtes → noms longs). Idempotent : si déjà long, ne touche pas.
+  expandSchools(arr){
+    if(!arr||!arr.length)return arr;
+    if(arr[0].type!==undefined && arr[0].nom!==undefined) return arr; // déjà au format long
+    var KM={u:'uai',n:'nom',t:'type',st:'statut',c:'commune',cp:'cp',d:'dept',la:'lat',lo:'lon',ss:'sousType',te:'totalEleves',nc:'nbClasses',me:'matEleves',i:'ips',w:'web',r:'reussite',v:'va',rp:'rep',l:'lv1',o:'opt',dcp:'depCP',dce:'depCE1'};
+    var TM={E:'Ecole',C:'Collège',L:'Lycée',K:'Crèche'}, SM={P:'Public',V:'Privé',A:'Associatif'};
+    for(var i=0;i<arr.length;i++){
+      var s=arr[i],o={};
+      for(var k in s){ var nk=KM[k]||k; o[nk]=s[k]; }
+      if(TM[o.type])o.type=TM[o.type];
+      if(SM[o.statut])o.statut=SM[o.statut];
+      arr[i]=o;
+    }
+    return arr;
+  },
+
+  // ── Map ───────────────────────────────────────────────────
+  initMap(){
+    if(typeof L==='undefined'){document.getElementById('map').innerHTML='<div class="state" style="padding-top:180px">🗺️ Carte indisponible (hors ligne)</div>';return;}
+    if(this.map){this.map.setView([this.home.lat,this.home.lon],13);this.fixMapSize();return;}
+    this.map=L.map('map',{zoomControl:true}).setView([this.home.lat,this.home.lon],13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
+      maxZoom:19, detectRetina:true, crossOrigin:true, attribution:'© OpenStreetMap © CARTO'
+    }).addTo(this.map);
+    this.fixMapSize();
+  },
+  fixMapSize(){ var m=this.map; if(!m)return; setTimeout(function(){m.invalidateSize(false);},80); setTimeout(function(){m.invalidateSize(false);},350); },
+  drawMarkers(){if(!this.map)return;var self=this;this.markers.forEach(function(m){self.map.removeLayer(m);});this.markers=[];
+    var hm=L.marker([this.home.lat,this.home.lon],{icon:L.divIcon({html:'<div class="me-dot"></div>',iconSize:[18,18],iconAnchor:[9,9]}),zIndexOffset:1000}).addTo(this.map).bindPopup('📍 '+this.home.label);this.markers.push(hm);
+    var C={'Collège':'#2C5BA6','Lycée':'#5B3FA6','Ecole':'#15803D'};
+    this.results.slice(0,80).forEach(function(s){if(!s.lat||!s.lon)return;
+      var isFav=self.favs.indexOf(s.uai)>=0;
+      var ic=isFav
+        ? L.divIcon({html:'<div class="fav-pin">❤️</div>',iconSize:[26,26],iconAnchor:[13,13],className:''})
+        : L.divIcon({html:'<div class="nm-dot" style="border-color:'+(C[s.type]||'#888')+'"></div>',iconSize:[15,15],iconAnchor:[7,7]});
+      var m=L.marker([s.lat,s.lon],{icon:ic,zIndexOffset:isFav?800:0});
+      var ind=self.indicators(s),pop=ind.length?'<br>'+ind.map(function(x){return x.k+' : <b>'+x.v+(x.u||'')+'</b>';}).join(' · '):'';
+      m.bindPopup('<b>'+self.esc(s.nom)+'</b><br>'+self.typeLbl(s)+pop);
+      m.on('click',function(){App.openSchool(s.uai);});m.addTo(self.map);self.markers.push(m);});},
+  selectOnMap(u){this.sel=u;var s=this.all.find(function(x){return x.uai===u;});if(s&&this.map&&s.lat)this.map.setView([s.lat,s.lon],15);this.render();},
+
+  // ── Fiche école ───────────────────────────────────────────
+  openSchool(u){
+    var s=this.all.find(function(x){return x.uai===u;}); if(!s)return;
+    var priv=(s.statut||'').toLowerCase().indexOf('priv')>=0;
+    var d=s._d!=null?this.distLabel(s._d):'';
+    var bd=this.badges(s).map(function(x){return '<span class="b '+x[0]+'">'+x[1]+'</span>';}).join('');
+    function row(k,v){return '<tr><td>'+k+(App.EXPL[k]?' <span class="info" title="'+App.esc(App.EXPL[k])+'">ⓘ</span>':'')+'</td><td>'+v+'</td></tr>';}
+    // Construction par SECTIONS thématiques pour la lisibilité
+    var sections=[]; var _o=s.opt||{};
+    function section(titre,contenu){ if(contenu)sections.push('<div class="fsec"><div class="fsec-t">'+titre+'</div><table>'+contenu+'</table></div>'); }
+
+    if(s.type==='Ecole'){
+      // ÉCOLE : Encadrement → Mixité → Repères
+      var enc='';
+      if(s.totalEleves!=null&&s.nbClasses){
+        var r=Math.round(s.totalEleves/s.nbClasses);
+        var repere = r<=15?'très réduit' : r<=20?'réduit (favorable)' : r<=24?'dans la moyenne (~22)' : 'au-dessus de la moyenne';
+        enc+=row('Taux d\'encadrement','<b>'+r+'</b> élèves/classe <span style="color:var(--soft);font-size:.82rem">· '+repere+'</span>');
+        if(s.rep && r<=14) enc+=row('Dédoublement','Probable (REP, ~'+r+'/classe en CP/CE1)');
+      }
+      if(s.totalEleves!=null)enc+=row('Effectif total',s.totalEleves+' élèves');
+      if(s.matEleves!=null)enc+=row('dont maternelle',s.matEleves+' élèves');
+      section('👥 Encadrement & effectifs',enc);
+
+      var mix='';
+      if(s.ips!=null)mix+=row('IPS (mixité sociale)','<b>'+Math.round(s.ips)+'</b>');
+      if(s.rep)mix+=row('Éducation prioritaire',s.rep);
+      section('⚖️ Profil social',mix);
+
+      if(s.depCP!=null||s.depCE1!=null){
+        var ctx=[]; if(s.depCP!=null)ctx.push('CP '+s.depCP+'%'); if(s.depCE1!=null)ctx.push('CE1 '+s.depCE1+'%');
+        section('📈 Repère départemental',row('Évaluations CP/CE1 <span class="info" title="Taux de maîtrise moyen du DÉPARTEMENT — pas le résultat de cette école (non publié par école).">ⓘ</span>',ctx.join(' · ')+'<br><span style="font-size:.78rem;color:var(--soft)">moyenne du département, pas de cette école</span>'));
+      }
+    } else {
+      // COLLÈGE / LYCÉE : Résultats → Mixité → Langues & options
+      var res='';
+      var lbl = s.type==='Lycée' ? 'Réussite au bac' : 'Réussite au brevet';
+      if(s.reussite!=null)res+=row(lbl,s.reussite+'%');
+      if(s.va!=null)res+=row('Valeur ajoutée','<b>'+(parseFloat(s.va)>=0?'+':'')+s.va+'</b>');
+      if(s.mention!=null)res+=row('Taux de mention',s.mention+'%');
+      if(s.txAcces!=null)res+=row('Taux d\'accès',s.txAcces+'%');
+      section('📈 Résultats',res);
+
+      var mix2='';
+      if(s.ips!=null)mix2+=row('IPS (mixité sociale)','<b>'+Math.round(s.ips)+'</b>');
+      if(s.totalEleves!=null)mix2+=row('Effectif total',s.totalEleves+' élèves');
+      if(s.totalEleves!=null&&s.nbClasses)mix2+=row('Élèves/classe',Math.round(s.totalEleves/s.nbClasses));
+      section('⚖️ Profil & encadrement',mix2);
+
+      var opt='';
+      if(s.lv1)opt+=row('Langues',this.esc(s.lv1));
+      var _secs=[];if(_o.sectionEuro)_secs.push('Européenne');if(_o.sectionInter)_secs.push('Internationale');if(_o.sport)_secs.push('Sport');if(_o.arts)_secs.push('Arts');if(_o.cinema)_secs.push('Cinéma');if(_o.theatre)_secs.push('Théâtre');
+      if(_secs.length)opt+=row('Sections',_secs.join(', '));
+      if(_o.internat)opt+=row('Internat','Oui 🛏');
+      if(_o.appr)opt+=row('Apprentissage','Oui');
+      if(_o.segpa)opt+=row('SEGPA','Oui');
+      section('🎓 Langues & options',opt);
+    }
+    // Note honnête si collège/lycée sans AUCUN indicateur de performance
+    if(s.type!=='Ecole' && s.reussite==null && s.va==null && s.ips==null && s.totalEleves==null){
+      sections.push('<div class="fsec"><div class="adv-tip" style="margin:0">ℹ️ Les indicateurs détaillés (résultats, IPS, valeur ajoutée) ne sont pas encore publiés par l\'Éducation nationale pour cet établissement — souvent une structure récente ou de petite taille.</div></div>');
+    }
+    // Services communs
+    var svc='';
+    if(_o.cantine)svc+=row('Cantine','Oui 🍽');
+    if(_o.ulis)svc+=row('ULIS (inclusion)','Oui ♿');
+    section('🏫 Services',svc);
+
+    // Coût indicatif pour le PRIVÉ (fourchette honnête — aucun tarif réel n'existe en open data)
+    if(priv){
+      var f=s.type==='Ecole'?'30 à 150 €/mois':s.type==='Collège'?'40 à 200 €/mois':'50 à 250 €/mois';
+      var cout=row('Frais de scolarité <span class="info" title="Aucune base officielle ne publie les tarifs des écoles privées. Fourchette indicative pour le privé SOUS CONTRAT — le hors-contrat peut être bien plus élevé. Contactez l\'établissement.">ⓘ</span>','<b>'+f+'</b><br><span style="font-size:.78rem;color:var(--soft)">fourchette indicative (privé sous contrat) — confirmez auprès de l\'établissement</span>');
+      section('💶 Coût indicatif',cout);
+    }
+
+    var rows=sections.join('');
+    var q=encodeURIComponent((s.nom||'')+' '+(s.commune||''));
+    var webUrl, webLbl;
+    if(s.web){ webUrl=this.esc(s.web); webLbl='🌐 Site de l\'école'; }
+    else if(s.type==='Ecole'){
+      // Les écoles n'ont quasi jamais de site propre → on vise la mairie (gère l'info scolaire 1er degré)
+      webUrl='https://www.google.com/search?q='+encodeURIComponent('mairie '+(s.commune||'')+' école '+(s.nom||''));
+      webLbl='🏛 Site de la mairie';
+    } else {
+      webUrl='https://www.google.com/search?q='+q+'%20site%20officiel';
+      webLbl='🔎 Rechercher le site';
+    }
+    var linkStyle='margin:0;flex:1;min-width:120px;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center';
+    var webBtn = '<a class="save" style="'+linkStyle+'" href="'+webUrl+'" target="_blank" rel="noopener noreferrer">'+webLbl+'</a>';
+    var avisBtns =
+      '<a class="save secondary" style="'+linkStyle+'" href="https://www.google.com/maps/search/'+q+'" target="_blank" rel="noopener noreferrer">⭐ Avis Google</a>';
+    document.getElementById('modal-t').textContent=s.nom;
+    document.getElementById('modal-c').innerHTML=
+      this.thumb(s,true)+
+      '<div style="color:var(--soft);font-size:.9rem;margin:10px 0">'+this.typeLbl(s)+' · '+(priv?'🏛 Privé':'🏛 Public')+' · '+this.esc(s.commune)+(s._d!=null?'<br><span style="color:var(--ink);font-weight:600">'+this.trajet(s._d)+' · '+d+'</span>':'')+'</div>'+
+      '<div class="bd">'+bd+'</div>'+
+      (rows?'<div style="margin-top:14px">'+rows+'</div>':'<p style="color:var(--soft);margin-top:12px;background:#F7F9FC;border:1px solid var(--line);border-radius:12px;padding:14px">ℹ️ Les indicateurs détaillés (résultats, IPS, valeur ajoutée) ne sont pas encore publiés par l\'Éducation nationale pour cet établissement. Cela concerne souvent les structures récentes ou de petite taille.</p>')+
+      '<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><button class="save" style="margin:0;flex:1" onclick="App.toggleFav(\''+u+'\');App.closeModal()">'+(this.favs.indexOf(u)>=0?'❤️ Retirer des favoris':'♡ Ajouter aux favoris')+'</button>'+
+      '<button class="save secondary" style="margin:0" onclick="App.shareSchool(\''+u+'\')">🔗 Partager</button></div>'+
+      '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">'+webBtn+avisBtns+'</div>'+
+      '<div style="margin-top:6px;font-size:.72rem;color:var(--soft);text-align:center">Les avis s\'ouvrent sur Google — ÉcoleClaire n\'héberge pas d\'avis.</div>'+
+      '<div class="harc-fiche" onclick="App.closeModal();App.go(\'harcelement\')">🛡️ Harcèlement scolaire : que faire ?<span style="margin-left:auto;color:#C2410C">›</span></div>'+
+      '<div class="src-line">📊 Données officielles '+(s.type==='Ecole'?'Éducation nationale':'Éducation nationale (IVAL/IPS)')+' · rentrée 2024. Vérifiables, mises à jour annuellement.</div>';
+    document.getElementById('modal').classList.add('on');
+    this.engaged=true; this.updateHelp();
+  },
+  closeModal(){document.getElementById('modal').classList.remove('on');},
+
+  // ── Partage (chantier 5 : rétention) ──
+  doShare(title,url){
+    if(navigator.share){navigator.share({title:title,url:url}).catch(function(){});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){App.toast('🔗 Lien copié !');},function(){prompt('Copiez ce lien :',url);});}
+    else prompt('Copiez ce lien :',url);
+  },
+  shareSchool(u){var s=this.all.find(function(x){return x.uai===u;});if(!s)return;
+    this.doShare('ÉcoleClaire — '+s.nom, location.origin+location.pathname+'#ecole='+u);},
+  shareCompare(){if(!this.compare.length)return;
+    this.doShare('ÉcoleClaire — comparatif', location.origin+location.pathname+'#compare='+this.compare.join(','));},
+  toast(msg){var t=document.getElementById('ec-toast');if(!t){t=document.createElement('div');t.id='ec-toast';t.className='ec-toast';document.body.appendChild(t);}t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('show');},2400);},
+
+  // ── Compare ───────────────────────────────────────────────
+  toggleCompare(u,btn){var i=this.compare.indexOf(u);if(i>=0)this.compare.splice(i,1);else{if(this.compare.length>=3){alert('Maximum 3 écoles.');return;}this.compare.push(u);}
+    if(btn){btn.classList.toggle('on',i<0);btn.textContent='⚖ '+(i<0?'Retiré':'Comparer');}
+    var bar=document.getElementById('cbar');bar.classList.toggle('on',this.compare.length>0);document.getElementById('ccount').textContent=this.compare.length+' établissement'+(this.compare.length>1?'s':'')+' sélectionné'+(this.compare.length>1?'s':'');this.updateHelp();},
+  openCompare(){
+    var ss=this.compare.map(function(u){return App.all.find(function(x){return x.uai===u;});}).filter(Boolean);if(!ss.length)return;
+    var rows=[['Trajet',function(s){return s._d!=null?App.trajet(s._d).replace(/🚶|🚗/g,'').trim():'—';},null],['Distance',function(s){return s._d!=null?App.distLabel(s._d):'—';},'min'],['IPS',function(s){return s.ips!=null?Math.round(s.ips):'—';},'max'],['Réussite',function(s){return s.reussite!=null?s.reussite+'%':'—';},'max'],['Valeur ajoutée',function(s){return s.va!=null?(parseFloat(s.va)>=0?'+':'')+s.va:'—';},'max'],['Élèves/classe',function(s){return(s.totalEleves!=null&&s.nbClasses)?Math.round(s.totalEleves/s.nbClasses):'—';},'min'],['Type',function(s){return App.typeLbl(s);},null],['Statut',function(s){return s.statut;},null],['Cantine',function(s){return(s.opt||{}).cantine?'✓':'—';},null]];
+    var h='<table><thead><tr><th>Critère</th>';ss.forEach(function(s){h+='<th>'+App.esc(s.nom.slice(0,16))+'</th>';});h+='</tr></thead><tbody>';
+    rows.forEach(function(r){h+='<tr><td>'+r[0]+'</td>';var vals=ss.map(function(s){return r[1](s);});var win=-1;
+      if(r[2]){var nums=ss.map(function(s){var n=String(r[1](s)).replace(/[^\d.]/g,'');return n?parseFloat(n):null;});var valid=nums.filter(function(n){return n!=null;});if(valid.length){var best=r[2]==='max'?Math.max.apply(null,valid):Math.min.apply(null,valid);win=nums.indexOf(best);}}
+      vals.forEach(function(v,i){h+='<td class="'+(i===win?'win':'')+'">'+v+'</td>';});h+='</tr>';});
+    document.getElementById('modal-t').textContent='⚖ Comparateur';
+    document.getElementById('modal-c').innerHTML=h+'</tbody></table>'+'<button class="save" style="margin-top:14px" onclick="App.shareCompare()">🔗 Partager ce comparatif</button>';
+    document.getElementById('modal').classList.add('on');
+  },
+
+  // ── Favoris (localStorage) ────────────────────────────────
+  toggleFav(u,btn){var i=this.favs.indexOf(u);if(i>=0)this.favs.splice(i,1);else this.favs.push(u);localStorage.setItem('ec_favs',JSON.stringify(this.favs));this.updateHelp();
+    if(btn){btn.classList.toggle('on',i<0);btn.textContent=i<0?'❤️':'♡';}
+    if(this.map&&this.results&&this.results.length)this.drawMarkers();},
+  renderFavs(){
+    var box=document.getElementById('fav-list');
+    var ss=this.favs.map(function(u){return App.all.find(function(x){return x.uai===u;});}).filter(Boolean);
+    if(!ss.length){box.innerHTML='<div class="empty-fav"><div style="font-size:2.4rem">💔</div><p>Aucun favori pour l\'instant.<br>Ajoutez des écoles depuis la recherche.</p></div>';return;}
+    box.innerHTML='<div class="list">'+ss.map(function(s,i){return App.card(s,i);}).join('')+'</div>';
+    box.querySelectorAll('.card').forEach(function(c){var u=c.dataset.uai;
+      c.querySelector('.see').addEventListener('click',function(e){e.stopPropagation();App.openSchool(u);});
+      c.querySelector('.fav').addEventListener('click',function(e){e.stopPropagation();App.toggleFav(u,c.querySelector('.fav'));App.renderFavs();});
+      var cm=c.querySelector('.cmp');if(cm)cm.addEventListener('click',function(e){e.stopPropagation();App.toggleCompare(u,cm);});
+      c.addEventListener('click',function(){App.openSchool(u);});});
+  },
+
+  // ── Profil (localStorage) ─────────────────────────────────
+
+  // ── Advisor (simple, basé règles + profil) ────────────────
+  // ── Calculateur de coût crèche (barème national CNAF 2026, taux d'effort horaire) ──
+  calcCreche(){
+    var rev=parseFloat(document.getElementById('crh-revenu').value);
+    var nb=parseInt(document.getElementById('crh-enfants').value,10);
+    var type=document.getElementById('crh-type').value;
+    var box=document.getElementById('crh-result');
+    if(isNaN(rev)||rev<=0){ box.innerHTML="Renseignez vos revenus pour voir l'estimation."; return; }
+    // Taux d'effort horaire 2026 par nombre d'enfants (collectif/micro vs familial/parental)
+    var tx={collectif:{1:0.0619,2:0.0516,3:0.0413,4:0.0310,5:0.0310,6:0.0310,7:0.0310,8:0.0206,9:0.0206,10:0.0206},
+            familial:{1:0.0516,2:0.0413,3:0.0310,4:0.0310,5:0.0310,6:0.0206,7:0.0206,8:0.0206,9:0.0206,10:0.0206}};
+    var n=Math.min(10,Math.max(1,nb));
+    var taux=tx[type][n]/100;
+    // Plancher 814,62 € et plafond 8 500 € (revenu mensuel pris en compte)
+    var planch=814.62, plaf=8500;
+    var base=Math.min(Math.max(rev,planch),plaf);
+    var horaire=base*taux;
+    // Bornes officielles 1 enfant : collectif 0,50–5,26 / familial 0,42–4,39
+    var mini=type==='collectif'?0.50:0.42, maxi=type==='collectif'?5.26:4.39;
+    if(n===1){ horaire=Math.min(Math.max(horaire,mini),maxi); }
+    var jour=horaire*10; // ~10h/jour
+    var mois=horaire*10*20; // ~20 jours/mois
+    box.innerHTML="Votre tarif estimé :<span class='big'>"+horaire.toFixed(2).replace('.',',')+" €/heure</span>"+
+      "soit environ <b>"+jour.toFixed(0)+" €/jour</b> (10 h) ou <b>"+mois.toFixed(0)+" €/mois</b> (temps plein).<div style='font-size:.78rem;color:var(--soft);margin-top:8px'>Barème national CNAF 2026 · "+n+" enfant"+(n>1?'s':'')+" · "+(type==='collectif'?'accueil collectif/micro-crèche':'accueil familial/parental')+". Tarif réel fixé par l'établissement.</div>";
+  },
+
+  // ── Conseiller local (exploite les vraies données : recherche en cours + favoris) ──
+  advise(){
+    var inp=document.getElementById('adv-in');
+    var q=inp.value.trim(); if(!q)return; inp.value='';
+    this.renderAdvice(q, this.answerQuery(q));
+  },
+  advisePreset(kind){
+    var labels={reco:'Quelles sont les meilleures écoles près de moi ?',favoris:'Compare mes favoris',proche:'Quelle est la plus proche ?',reussite:'Laquelle a la meilleure réussite ?',ips:"C'est quoi l'IPS ?",reco_cantine:'Les meilleures écoles avec cantine',favtop2:'Compare le top 2'};
+    // suivi spécial : comparer le top 2 de la dernière reco
+    if(kind==='favtop2'){
+      var ranked=this.rankBy(this.advisePool(),this.getAdvPriority()||'reco').slice(0,2);
+      if(ranked.length<2){ this.renderAdvice('Compare le top 2','Il me faut au moins 2 écoles. Lancez une recherche d\'abord.'); return; }
+      var html='Comparaison des 2 mieux classées :';
+      ranked.forEach(function(s){ var bits=[]; if(s.va!=null)bits.push('VA '+(parseFloat(s.va)>=0?'+':'')+s.va); if(s.reussite!=null)bits.push('réussite '+s.reussite+'%'); if(s.ips!=null)bits.push('IPS '+Math.round(s.ips)); html+=App.recCard(s,null,bits.join(' · ')); });
+      var a=ranked[0],b2=ranked[1],diff=[];
+      if((parseFloat(a.va)||0)!==(parseFloat(b2.va)||0))diff.push((parseFloat(a.va)>parseFloat(b2.va)?a:b2).nom+' fait mieux progresser');
+      if(a._d!=null&&b2._d!=null&&a._d!==b2._d)diff.push((a._d<b2._d?a:b2).nom+' est plus proche');
+      if(diff.length)html+="<div class='adv-tip'>💡 "+diff.join(' · ')+'.</div>';
+      this.renderAdvice('Compare le top 2',html); return;
+    }
+    this.renderAdvice(labels[kind]||kind, this.answerQuery(kind));
+  },
+  renderAdvice(q, html){
+    var box=document.getElementById('adv-box');
+    box.innerHTML='<div class="adv-q">Vous : '+this.esc(q)+'</div><div class="adv-a">'+html+'</div>';
+  },
+  // Pool d'écoles à analyser : résultats de recherche si dispo, sinon favoris, sinon rien
+  advisePool(){
+    if(this.results&&this.results.length) return this.results.slice();
+    if(this.favs&&this.favs.length){ var self=this; return this.favs.map(function(u){return self.all.find(function(s){return s.uai===u;});}).filter(Boolean); }
+    return [];
+  },
+  recCard(s,rank,metric){
+    return '<button class="adv-rec" onclick="App.go(\'home\');App.openSchool(\''+s.uai+'\')">'+
+      (rank?'<span class="rk">'+rank+'</span>':'')+
+      '<span class="rb"><span class="rn">'+this.esc(s.nom)+'</span><span class="rm">'+this.esc(s.commune)+(s._d!=null?' · '+this.trajet(s._d):'')+(metric?' · '+metric:'')+'</span></span></button>';
+  },
+  // ── PACK GRATUIT : parseur de question composée (niveau + services + priorités) ──
+  parseQuery(q){
+    var f={level:null,svc:[],lang:null,priority:null,statut:null,notes:[]};
+    // util : vrai si motif présent SANS négation juste avant (gère « sans internat », « pas d'internat »)
+    function has(re){ return re.test(q); }
+    function neg(word){ return new RegExp('(sans|pas\\s+(de|d.)?|aucun[e]?|ni)\\s+[^.,;]{0,12}'+word).test(q); }
+
+    // ── NIVEAU (langage naturel + âge approximatif) ──
+    if(/matern|petite section|moyenne section|grande section|\b3 ans|\b4 ans|\b5 ans|tout.petit/.test(q))f.level='maternelle';
+    else if(/élémentaire|elementaire|primaire|\bcp\b|ce[12]|cm[12]|\b[6-9] ans|\b10 ans/.test(q))f.level='elementaire';
+    else if(/collège|college|6e|6ème|6eme|5e|4e|3e|\b1[12] ans|\b1[34] ans|pré.?ado|preado/.test(q))f.level='college';
+    else if(/lycée|lycee|seconde|première|premiere|terminale|\bbac\b|\b1[5-8] ans|ado(?!opt)/.test(q))f.level='lycee';
+
+    // ── SERVICES (synonymes + expressions familières), avec gestion négation ──
+    if(has(/cantine|repas|déjeuner|dejeuner|self|restauration|mange/) && !neg('cantine'))f.svc.push('cantine');
+    if(has(/ulis|handicap|inclusi|besoin.*particulier|dys(lexie|praxie|phasie)?|autis|tdah|aménagement|amenagement/) && !neg('ulis'))f.svc.push('ulis');
+    if(has(/internat|pension|interne|dormir|loge/) && !neg('internat'))f.svc.push('internat');
+    if(has(/sport|sportiv|foot|tennis|natation|athlè|athle|section.*sport/) && !neg('sport'))f.svc.push('sport');
+    if(has(/bilingue|bi.?langue|européenne|europeenne|\beuro\b|deux langues/) && !neg('euro'))f.svc.push('sectionEuro');
+    if(has(/internationale|international|expatri|étranger|etranger/) && !neg('internation'))f.svc.push('sectionInter');
+    if(has(/segpa|en difficulté|difficulté scolaire|décroch|decroch/))f.svc.push('segpa');
+    if(has(/petite.*classe|petite.*structure|petit.*effectif|peu d.élèves|peu d.eleves|classe.*réduite|classe.*reduite|encadr|familial|à taille humaine|a taille humaine|pas.*surcharg/) && !neg('classe'))f.svc.push('petites');
+
+    // ── LANGUE ──
+    if(/anglais|english/.test(q))f.lang='Anglais'; else if(/allemand|deutsch/.test(q))f.lang='Allemand';
+    else if(/espagnol|español|espanol/.test(q))f.lang='Espagnol'; else if(/italien|italiano/.test(q))f.lang='Italien';
+    else if(/chinois|mandarin/.test(q))f.lang='Chinois';
+
+    // ── STATUT ──
+    if(/privé|prive|catho|confession|hors.contrat|sous.contrat/.test(q))f.statut='Privé';
+    else if(/public|laïc|laic|gratuit.*école|gratuit.*ecole/.test(q))f.statut='Public';
+
+    // ── PRIORITÉ (langage naturel) ──
+    if(/proche|près|pres\b|à côté|a cote|pas.*loin|pas.*trop loin|distance|trajet|à pied|a pied|marche|rapide.*accès|près de.*maison|quartier|2 min|5 min|10 min/.test(q))f.priority='dist';
+    else if(/réussite|reussite|brevet|dnb|résultat|resultat|\bnote|taux|niveau scolaire|bon niveau|excellent|meilleur.*résultat|exigeant/.test(q))f.priority='reussite';
+    else if(/progress|valeur ajout|fait progress|tire.*vers le haut|fait avancer|épanou|epanou|bienveillan|au.delà/.test(q))f.priority='va';
+    else if(/petite.*classe|encadr|peu d.élèves|attention.*individu|suivi.*personnalis/.test(q))f.priority='classe';
+    else if(/mixité|mixite|social|diversité|diversite/.test(q))f.priority='ips';
+
+    // ── SITUATIONS PARENTALES → on devine une intention douce (note affichée, pas un filtre dur) ──
+    if(/timide|anxieu|stress|fragile|sensible|réservé|reserve|manque.*confiance|harcel/.test(q)){
+      if(f.svc.indexOf('petites')<0)f.svc.push('petites');
+      if(!f.priority)f.priority='va';
+      f.notes.push('Pour un enfant sensible, je privilégie les structures à effectif réduit qui font progresser leurs élèves dans un cadre bienveillant.');
+    }
+    if(/doué|doue|précoce|precoce|hpi|haut potentiel|s.ennuie|en avance/.test(q)){
+      if(!f.priority)f.priority='va';
+      f.notes.push('Pour un enfant à fort potentiel, je regarde la valeur ajoutée et les sections (euro, internationale) qui stimulent davantage.');
+    }
+    if(/difficulté|difficulte|en retard|décroch|decroch|aime pas.*école|aime pas.*ecole|remotiv/.test(q)){
+      if(!f.priority)f.priority='va';
+      f.notes.push('Pour redonner confiance, la valeur ajoutée (capacité à faire progresser) compte plus que le taux de réussite brut.');
+    }
+    return f;
+  },
+  // Applique les critères extraits au pool
+  filterPool(pool,f){
+    return pool.filter(function(s){
+      if(f.level){
+        var lv=s.type==='Ecole'?((s.sousType||'').toLowerCase().indexOf('matern')>=0?'maternelle':'elementaire'):(s.type==='Collège'?'college':'lycee');
+        if(lv!==f.level)return false;
+      }
+      if(f.statut&&(s.statut||'').indexOf(f.statut)<0)return false;
+      if(f.lang&&String(s.lv1||'').toLowerCase().indexOf(f.lang.toLowerCase())<0)return false;
+      if(f.svc.length){var o=s.opt||{};if(!f.svc.every(function(x){if(x==='petites')return s.totalEleves&&s.nbClasses&&(s.totalEleves/s.nbClasses)<=22;return o[x];}))return false;}
+      return true;
+    });
+  },
+  // #2 : phrase expliquant POURQUOI cette école est recommandée
+  recReason(s,rankKey){
+    var r=[];
+    if(s.va!=null&&parseFloat(s.va)>0)r.push('elle fait progresser ses élèves au-delà des attentes (valeur ajoutée +'+s.va+')');
+    else if(s.reussite!=null&&s.reussite>=85)r.push('un très bon taux de réussite ('+s.reussite+'%)');
+    if(s._d!=null&&s._d<=2)r.push('elle est tout près ('+this.trajet(s._d)+')');
+    if(s.totalEleves&&s.nbClasses&&(s.totalEleves/s.nbClasses)<=22)r.push('des classes à effectif réduit ('+Math.round(s.totalEleves/s.nbClasses)+'/classe)');
+    if(!r.length)return '';
+    return 'Je la mets en avant car '+r.slice(0,2).join(', et ')+'.';
+  },
+  // #3 : détecte un compromis proximité vs qualité
+  tradeOff(pool){
+    var byD=this.rankBy(pool,'dist'), byScore=this.rankBy(pool,'reco');
+    var closest=byD[0], best=byScore[0];
+    if(!closest||!best||closest.uai===best.uai)return '';
+    var dClose=closest._d!=null?closest._d:null, dBest=best._d!=null?best._d:null;
+    var betterVA = (parseFloat(best.va)||-99) - (parseFloat(closest.va)||-99);
+    if(betterVA>=2 && dBest!=null && dClose!=null && (dBest-dClose)<=2.5){
+      return "<div class='adv-tip'>💡 La plus proche est <b>"+this.esc(closest.nom)+"</b>, mais à quelques minutes de plus, <b>"+this.esc(best.nom)+"</b> fait nettement mieux progresser ses élèves. À vous de peser proximité vs résultats.</div>";
+    }
+    return '';
+  },
+  // #4 : mémoire des priorités
+  setAdvPriority(p){ this.advPriority=p; try{localStorage.setItem('ec_advpriority',p);}catch(e){} },
+  getAdvPriority(){ if(this.advPriority)return this.advPriority; try{return localStorage.getItem('ec_advpriority');}catch(e){return null;} },
+  // #5 : boutons de suivi
+  followUps(buttons){
+    if(!buttons.length)return '';
+    return '<div class="advchips" style="margin-top:12px">'+buttons.map(function(b){
+      return '<button class="advchip" onclick="App.advisePreset(\''+b[1]+'\')">'+b[0]+'</button>';
+    }).join('')+'</div>';
+  },
+
+  answerQuery(qraw){
+    var q=(qraw||'').toLowerCase();
+    var pool=this.advisePool();
+    var noLoc = !this.home;
+    // ── Questions de définition (toujours dispo) ──
+    if(/\bips\b|mixit|position sociale/.test(q))
+      return "L'<b>IPS</b> (Indice de Position Sociale) reflète le milieu social des familles d'un établissement, sur une échelle d'environ 50 à 150. <b>Ce n'est pas une note de qualité</b> : c'est un repère de mixité. Un IPS modéré avec une <b>bonne valeur ajoutée</b> signale souvent une école qui fait réellement progresser ses élèves. Regardez les deux ensemble plutôt que l'IPS seul.";
+    if(/valeur ajout|ivac|ival/.test(q))
+      return "La <b>valeur ajoutée</b> compare les résultats réels d'un établissement à ceux <i>attendus</i> vu le profil de ses élèves. Un score <b>positif (+)</b> = l'établissement fait mieux qu'attendu, donc il <b>fait progresser</b> ses élèves. C'est souvent plus parlant que le taux de réussite brut, qui dépend beaucoup du public accueilli.";
+    if(/priv|public/.test(q))
+      return "Public et privé sous contrat suivent <b>les mêmes programmes</b> et le même bac/brevet. Le privé peut avoir un projet pédagogique ou religieux propre et des frais de scolarité. Le mieux : utilisez le filtre <b>Statut</b> et comparez concrètement 2-3 établissements proches sur la valeur ajoutée et la distance.";
+    if(/rep|éducation prioritaire|education prioritaire/.test(q))
+      return "<b>REP / REP+</b> = réseaux d'éducation prioritaire : des moyens renforcés (classes souvent allégées, dispositifs d'accompagnement) pour des établissements en zone moins favorisée. Ce n'est ni un gage ni un défaut en soi — à regarder avec la valeur ajoutée, qui montre si ces moyens font progresser les élèves.";
+    if(/harc/.test(q)){ setTimeout(function(){App.go('harcelement');},400); return "Je vous ouvre la page <b>Harcèlement scolaire</b> avec les numéros d'aide (3018, 119) et les démarches. Un instant…"; }
+    if(/comment.*marche|comment.*fonctionne|c'est quoi.*site|pourquoi.*chatgpt|d'où.*donnée|faq|fiable|confiance/.test(q)){ setTimeout(function(){App.go('faq');},400); return "Je vous ouvre les <b>questions fréquentes</b> : d'où viennent les données, pourquoi nous faire confiance, etc. Un instant…"; }
+
+    // ── Besoin de données : pas de recherche lancée ──
+    if(!pool.length){
+      return "Pour des conseils <b>concrets</b>, lancez d'abord une recherche (ville ou 📍 autour de moi) ou ajoutez des favoris. Je pourrai alors comparer les écoles réelles autour de vous.<div class='adv-tip'>Astuce : tapez votre ville dans Découvrir, puis revenez me voir.</div>";
+    }
+
+    // ── Comparer les favoris ──
+    if(/favori|compar/.test(q)){
+      var favs=(this.favs||[]).map(function(u){return App.all.find(function(s){return s.uai===u;});}).filter(Boolean);
+      if(favs.length<1) return "Vous n'avez pas encore de favoris. Ajoutez-en avec le ❤️ sur une fiche, puis je les comparerai ici.";
+      if(favs.length===1) return "Vous avez 1 favori : <b>"+this.esc(favs[0].nom)+"</b>. Ajoutez-en un 2e pour que je les compare.";
+      var best=this.rankBy(favs,'va')[0], closest=this.rankBy(favs,'dist')[0];
+      var out="Parmi vos <b>"+favs.length+" favoris</b> :<br>";
+      out+=this.recCard(best,null,'meilleure progression'+(best.va!=null?' (VA '+(parseFloat(best.va)>=0?'+':'')+best.va+')':''));
+      if(closest.uai!==best.uai) out+=this.recCard(closest,null,'la plus proche');
+      out+="<div class='adv-tip'>Touchez une école pour ouvrir sa fiche complète.</div>";
+      return out;
+    }
+
+    var loc = this.home? this.home.label : 'votre zone';
+    // Si la question décrit une situation d'enfant (timide, dys, précoce…), aller direct à la reco enrichie (avec note)
+    var _sit=this.parseQuery(q);
+    var _situation = _sit.notes && _sit.notes.length;
+    // ── La plus proche ──
+    if(!_situation && /proche|près|pres|distance|trajet|pied/.test(q)){
+      this.setAdvPriority('dist');
+      var byD=this.rankBy(pool,'dist').slice(0,3),o="Les plus proches de <b>"+this.esc(loc)+"</b> :";
+      byD.forEach(function(s,i){o+=App.recCard(s,i+1,s.reussite!=null?'réussite '+s.reussite+'%':null);});
+      return o;
+    }
+    // ── Meilleure réussite ──
+    if(!_situation && /réussite|reussite|brevet|dnb|résultat|resultat|note/.test(q)){
+      this.setAdvPriority('reussite');
+      var byR=this.rankBy(pool,'reussite').filter(function(s){return s.reussite!=null;}).slice(0,3);
+      if(!byR.length) return "Aucune donnée de réussite (DNB) sur les écoles trouvées — c'est normal pour les maternelles/primaires (pas de brevet). Essayez sur des collèges.";
+      var o2="Meilleures réussites au brevet autour de <b>"+this.esc(loc)+"</b> :";
+      byR.forEach(function(s,i){o2+=App.recCard(s,i+1,'réussite '+s.reussite+'%'+(s.va!=null?' · VA '+(parseFloat(s.va)>=0?'+':'')+s.va:''));});
+      return o2;
+    }
+    // ── Petites classes ──
+    if(!_situation && /petite|classe|effectif|encadr/.test(q)){
+      var byC=this.rankBy(pool,'classe').filter(function(s){return s.totalEleves&&s.nbClasses;}).slice(0,3);
+      if(!byC.length) return "Pas d'effectifs disponibles sur les écoles trouvées. Relancez l'enrichissement des données si besoin.";
+      var o3="Meilleur taux d'encadrement (élèves/classe) :";
+      byC.forEach(function(s,i){o3+=App.recCard(s,i+1,Math.round(s.totalEleves/s.nbClasses)+' élèves/classe');});
+      return o3;
+    }
+    // ── Recommandation générale (PACK) : parse critères + filtre + raison + compromis + priorité + suivi ──
+    var f=this.parseQuery(q);
+    // #4 mémoire : si l'utilisateur a déjà exprimé une priorité, on l'applique faute d'autre
+    if(!f.priority){ var mem=this.getAdvPriority(); if(mem)f.priority=mem; } else { this.setAdvPriority(f.priority); }
+    var filtered=this.filterPool(pool,f);
+    var crit=[];
+    if(f.level)crit.push(f.level);
+    if(f.statut)crit.push(f.statut.toLowerCase());
+    if(f.lang)crit.push(f.lang);
+    if(f.svc.length)crit.push(f.svc.map(function(x){return ({cantine:'cantine',ulis:'ULIS',internat:'internat',sport:'sport',sectionEuro:'section euro',sectionInter:'section intern.',segpa:'SEGPA',petites:'petites classes'})[x]||x;}).join(', '));
+    var critTxt=crit.length?' ('+crit.join(' · ')+')':'';
+
+    if(f.level||f.statut||f.lang||f.svc.length){
+      if(!filtered.length)
+        return "Aucune école ne correspond à tous vos critères"+critTxt+" dans la zone trouvée. Essayez d'élargir le rayon ou d'enlever un critère."+this.followUps([['🏆 Voir les meilleures sans filtre','reco'],['🚶 La plus proche','proche']]);
+    } else { filtered=pool; }
+
+    var sortKey = f.priority||'reco';
+    var ranked=this.rankBy(filtered,sortKey).slice(0,3);
+    var noteHtml = (f.notes&&f.notes.length)? "<div class='adv-tip' style='margin-bottom:10px'>🧭 "+f.notes[0]+"</div>" : "";
+    var intro=noteHtml+"Parmi <b>"+filtered.length+" école"+(filtered.length>1?'s':'')+"</b> autour de <b>"+this.esc(loc)+"</b>"+critTxt+", voici "+(ranked.length>1?'mes recommandations':'ma recommandation')+" :";
+    ranked.forEach(function(s,i){
+      var bits=[];
+      if(s.va!=null)bits.push('VA '+(parseFloat(s.va)>=0?'+':'')+s.va);
+      else if(s.reussite!=null)bits.push('réussite '+s.reussite+'%');
+      intro+=App.recCard(s,i+1,bits.join(' · '));
+    });
+    // #2 raison du n°1
+    if(ranked[0]){ var why=this.recReason(ranked[0]); if(why)intro+="<div class='adv-tip'>🥇 "+why+"</div>"; }
+    // #3 compromis proximité/qualité
+    intro+=this.tradeOff(filtered);
+    // #5 suivis contextuels
+    var fu=[];
+    if(ranked.length>=2)fu.push(['⚖️ Comparer le top 2','favtop2']);
+    if(!f.svc.length)fu.push(['🍽 Avec cantine','reco_cantine']);
+    fu.push(['🚶 La plus proche','proche']);
+    intro+=this.followUps(fu);
+    return intro;
+  },
+  // Classement réutilisable
+  rankBy(arr,key){
+    var a=arr.slice();
+    if(key==='dist') a.sort(function(x,y){return (x._d==null?9999:x._d)-(y._d==null?9999:y._d);});
+    else if(key==='reussite') a.sort(function(x,y){return (y.reussite||-1)-(x.reussite||-1);});
+    else if(key==='va') a.sort(function(x,y){return (parseFloat(y.va)||-99)-(parseFloat(x.va)||-99);});
+    else if(key==='classe') a.sort(function(x,y){var rx=(x.totalEleves&&x.nbClasses)?x.totalEleves/x.nbClasses:999,ry=(y.totalEleves&&y.nbClasses)?y.totalEleves/y.nbClasses:999;return rx-ry;});
+    else if(key==='reco'){
+      a.sort(function(x,y){return App._recoScore(y)-App._recoScore(x);});
+    }
+    return a;
+  },
+  // Score composite : progression (VA) + réussite + proximité, normalisé
+  _recoScore(s){
+    var sc=0;
+    if(s.va!=null) sc += Math.max(-5,Math.min(8,parseFloat(s.va)))*3;       // progression : poids fort
+    if(s.reussite!=null) sc += (s.reussite-80)*0.4;                          // réussite au-dessus de 80%
+    if(s._d!=null) sc += Math.max(-8,5-s._d);                               // proximité : bonus si <5km
+    if(s.totalEleves&&s.nbClasses){var r=s.totalEleves/s.nbClasses; sc += (24-r)*0.5;} // petites classes
+    return sc;
+  },
+
+  // ════════════════════════════════════════════════════════
+  // ENRICHISSEMENT — téléchargement direct des critères manquants
+  // ════════════════════════════════════════════════════════
+  setBaseStatus(msg,err){var el=document.getElementById('base-status');if(el){el.textContent=msg;el.style.color=err?'#B91C1C':'var(--green)';}},
+
+  loadBaseFile(ev){
+    var f=ev.target.files[0];if(!f)return;
+    var rd=new FileReader();
+    rd.onload=function(){try{App.all=App.expandSchools(JSON.parse(rd.result));App.setBaseStatus(App.all.length+' établissements chargés ✅');App.renderDataList();}catch(e){App.setBaseStatus('Fichier JSON invalide',true);}};
+    rd.readAsText(f);
+  },
+
+  // Couverture actuelle d'un dataset dans la base
+  coverage(d){
+    if(!this.all.length) return 0;
+    return this.all.filter(function(s){
+      if(d.applies && d.applies.indexOf(s.type)<0) return false;
+      if(d.target==='rep') return s.rep!=null;
+      if(d.target==='lv1') return s.lv1!=null;
+      if(d.target.indexOf('opt.')===0) return !!(s.opt&&s.opt[d.target.slice(4)]);
+      return s[d.target]!=null;
+    }).length;
+  },
+
+  renderDataList(){
+    var box=document.getElementById('dlist');
+    box.innerHTML=DATASETS.map(function(d){
+      var n=App.coverage(d);
+      var status = n===0 ? '<span class="dstat todo" id="st-'+d.key+'">manquant</span>'
+                         : '<span class="dstat ok" id="st-'+d.key+'">'+n.toLocaleString('fr-FR')+' ✓</span>';
+      return '<div class="drow"><div><div class="dn">'+d.label+'</div><div class="ds">'+d.ds+'</div></div>'+status+'</div>';
+    }).join('');
+  },
+
+  log(msg){var el=document.getElementById('dlog');el.classList.remove('hidden');el.textContent+=msg+'\n';el.scrollTop=el.scrollHeight;},
+
+  // Télécharge UN dataset depuis l'API ODS (export JSON complet)
+  async downloadDataset(d){
+    var ck=d.ds+'|'+(d.sel||'');
+    if(this._dsCache&&this._dsCache[ck]){this.log('⬇️  '+d.label+' … ♻️ cache (déjà téléchargé)');return this._dsCache[ck];}
+    this.log('⬇️  '+d.label+' …');
+    var self=this;
+    async function fetchJson(url){
+      var r=await fetch(url);
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      var txt=await r.text();
+      var data;
+      try{ data=JSON.parse(txt); }
+      catch(pe){ throw new Error('JSON tronqué ('+(txt.length/1024|0)+' Ko reçus)'); }
+      var rows=Array.isArray(data)?data:(data.results||[]);
+      if(!rows.length) throw new Error('0 ligne');
+      return rows;
+    }
+    // Pour les gros datasets multi-années : ne garder que la dernière rentrée (réduit le volume → évite la troncature)
+    async function latestYear(){
+      try{
+        var fr=await fetch(ODS+d.ds+'/records?select='+d.where+'&group_by='+d.where+'&order_by='+d.where+'%20desc&limit=1');
+        var fj=await fr.json();
+        var rec=(fj.results&&fj.results[0])||null;
+        var raw=rec?rec[d.where]:null;
+        if(raw==null)return null;
+        var m=String(raw).match(/(\d{4})/); // extrait l'année, que ce soit "2024", "2024-2025" ou une date ISO
+        return m?m[1]:null;
+      }catch(e){ return null; }
+    }
+    async function get(useSel){
+      var qs='/exports/json?limit=-1'+(useSel&&d.sel?'&select='+encodeURIComponent(d.sel):'');
+      if(d.where){
+        var yr=await latestYear();
+        if(yr){ qs+='&where='+encodeURIComponent('year('+d.where+')='+yr); self.log('   (rentrée '+yr+')'); }
+      }
+      return await fetchJson(ODS+d.ds+qs);
+    }
+    // Fallback : pagination /records (100/page) filtrée sur la dernière année — pour les gros datasets dont l'export tronque
+    async function viaRecords(){
+      var yr=d.where?await latestYear():null;
+      var where=yr?('&where='+encodeURIComponent('year('+d.where+')='+yr)):'';
+      var all=[],offset=0,page=100,guard=0;
+      self.log('   ↻ bascule sur /records paginé'+(yr?' (rentrée '+yr+')':''));
+      while(guard++<400){
+        var u=ODS+d.ds+'/records?limit='+page+'&offset='+offset+where;
+        var r=await fetch(u); if(!r.ok) throw new Error('HTTP '+r.status+' (records)');
+        var j=await r.json(); var res=j.results||[];
+        if(!res.length) break;
+        all=all.concat(res); offset+=page;
+        if(offset>=(j.total_count||offset)) break;
+      }
+      if(!all.length) throw new Error('0 ligne (records)');
+      return all;
+    }
+    try{
+      var rows;
+      try{ rows=await get(true); }
+      catch(e1){
+        if(d.sel){ self.log('   ⚠️ select rejeté ('+e1.message+'), nouvel essai sans filtre de colonnes…');
+          try{ rows=await get(false); }catch(e2){ rows=await viaRecords(); } }
+        else { self.log('   ⚠️ export KO ('+e1.message+')'); rows=await viaRecords(); }
+      }
+      this.log('   ✓ '+rows.length.toLocaleString('fr-FR')+' lignes reçues');
+      if(!this._dsCache)this._dsCache={};this._dsCache[ck]=rows;
+      return rows;
+    }catch(e){
+      this.log('   ❌ ÉCHEC : '+e.message);
+      return null;
+    }
+  },
+
+  // Construit un index UAI→valeur pour un dataset
+  buildIndex(d,rows){
+    var idx={};
+    for(var i=0;i<rows.length;i++){
+      var u=normUAI(pick(rows[i],d.uai)); if(!u) continue;
+      var v;
+      if(d.tf==='langues'){
+        // dérive LV1 depuis colonnes *_lv1_* — DÉDUPLIQUE (plusieurs colonnes par niveau) + capitalise
+        var keys=Object.keys(rows[i]).filter(function(k){return /lv1/i.test(k)&&rows[i][k]>0;});
+        var seen={},langs=[];
+        keys.forEach(function(k){var m=k.match(/(anglais|allemand|espagnol|italien|chinois|arabe|russe|portugais)/i);if(m){var L=m[1].toLowerCase();L=L.charAt(0).toUpperCase()+L.slice(1);if(!seen[L]){seen[L]=1;langs.push(L);}}});
+        v=langs.join(', ');
+        if(!v)continue;
+      } else if(d.tf==='flag'){
+        var fv=String(pick(rows[i],d.val)||'').trim().toUpperCase();
+        if(fv==='1'||fv==='OUI'||fv==='TRUE')v=true;else continue;
+      } else if(d.tf==='subtype'){
+        var _t=String(rows[i].type_etablissement||'').toLowerCase();
+        if(_t.indexOf('maternelle')>=0)v='Maternelle';
+        else if(_t.indexOf('élémentaire')>=0||_t.indexOf('elementaire')>=0)v='Élémentaire';
+        else if(_t.indexOf('primaire')>=0)v='Primaire';
+        else continue;
+      } else if(d.tf==='classes'){
+        // Détecte la colonne du nombre total de classes (nom variable selon millésime)
+        var row=rows[i];
+        var ck2=Object.keys(row).find(function(k){return /total.*class|nombre.*class|nb.*class/i.test(k)&&!/eleve|preelem|elem/i.test(k);});
+        if(!ck2)ck2=Object.keys(row).find(function(k){return /\bclass/i.test(k)&&typeof row[k]!=='string';});
+        var cv=ck2?parseFloat(row[ck2]):NaN;
+        if(isNaN(cv)||cv<=0)continue;
+        v=Math.round(cv);
+      } else if(d.tf==='sumeleves'){
+        // Effectif total : privilégie une colonne 'total' explicite, sinon somme les niveaux
+        var row3=rows[i],keysE=Object.keys(row3);
+        var totalKey=keysE.find(function(k){return /(total|nombre_total).*eleve|effectif_total|nombre_d_eleves\b/i.test(k)&&!/sexe|fille|garcon|lv/i.test(k);});
+        var tot=0,found=false;
+        if(totalKey){var tv=parseFloat(row3[totalKey]);if(!isNaN(tv)&&tv>0){tot=tv;found=true;}}
+        if(!found){
+          keysE.forEach(function(k){
+            if(/(_6eme|_5eme|_4eme|_3eme|_2nde|_1ere|_terminale|eleves_niveau|nombre_d_eleves_)/i.test(k)&&!/sexe|fille|garcon|lv|langue/i.test(k)){
+              var nv=parseFloat(row3[k]); if(!isNaN(nv)&&nv>=0){tot+=nv;found=true;}
+            }
+          });
+        }
+        if(!found||tot<=0)continue;
+        v=Math.round(tot);
+      } else if(d.tf==='web'){
+        var w=String(pick(rows[i],d.val)||'').trim();
+        if(!w||!/[a-z]/i.test(w))continue;
+        if(!/^https?:\/\//i.test(w))w='https://'+w.replace(/^\/+/,'');
+        v=w;
+      } else if(d.tf==='rep'){
+        var raw=String(pick(rows[i],d.val)||'').toUpperCase();
+        if(raw.indexOf('REP+')>=0||raw.indexOf('REP +')>=0)v='REP+';else if(raw.indexOf('REP')>=0)v='REP';else continue;
+      } else {
+        var raw2=pick(rows[i],d.val); if(raw2==null)continue;
+        v=d.tf==='round'?Math.round(parseFloat(raw2)):d.tf==='float'?parseFloat(raw2):raw2;
+        if(typeof v==='number'&&isNaN(v))continue;
+      }
+      if(!idx[u])idx[u]=v;
+    }
+    return idx;
+  },
+
+  // Fusionne (merge + normalizeUAI — robuste)
+  merge(base,d,idx){
+    var c=0;
+    for(var i=0;i<base.length;i++){
+      var s=base[i]; var u=normUAI(s.uai); if(!u)continue;
+      if(d.applies && d.applies.indexOf(s.type)<0) continue;
+      var v=idx[u];
+      if(v!=null){
+        if(d.target.indexOf('opt.')===0){
+          var ok2=d.target.slice(4); if(!s.opt)s.opt={};
+          if(d.keep&&s.opt[ok2])continue;
+          s.opt[ok2]=v;
+        } else {
+          if(d.keep&&s[d.target]!=null&&s[d.target]!=='')continue;
+          s[d.target]=v; if(d.target==='lv1'&&!s.opt)s.opt={};
+        }
+        c++;
+      }
+    }
+    return c;
+  },
+
+  async enrichAll(){
+    if(!this.all.length){alert('Chargez d\'abord ecoles-france.json.');return;}
+    var btn=document.getElementById('enrich-btn');btn.disabled=true;btn.textContent='⏳ Téléchargement en cours…';
+    document.getElementById('dlog').textContent='';this._dsCache={};
+    this.log('=== Enrichissement démarré ('+this.all.length.toLocaleString('fr-FR')+' établissements) ===\n');
+    var totalMerged=0;
+    for(var i=0;i<DATASETS.length;i++){
+      var d=DATASETS[i];
+      var st=document.getElementById('st-'+d.key);if(st){st.className='dstat run';st.textContent='…';}
+      var rows=await this.downloadDataset(d);
+      if(rows){
+        var idx=this.buildIndex(d,rows);
+        var merged=this.merge(this.all,d,idx);
+        totalMerged+=merged;
+        this.log('   ✓ fusionné : '+merged.toLocaleString('fr-FR')+' établissements enrichis\n');
+        if(st){st.className='dstat ok';st.textContent=this.coverage(d).toLocaleString('fr-FR')+' ✓';}
+      } else {
+        if(st){st.className='dstat todo';st.textContent='échec';}
+      }
+    }
+    await this.enrichDeptEval();
+    this.log('=== Terminé : '+totalMerged.toLocaleString('fr-FR')+' enrichissements au total ===');
+    // Validation finale
+    var ips=this.all.filter(function(s){return s.ips!=null;}).length;
+    var rep=this.all.filter(function(s){return s.rep!=null;}).length;
+    var lng=this.all.filter(function(s){return s.lv1!=null;}).length;
+    this.log('\n[IPS] '+ips.toLocaleString('fr-FR')+'  [REP] '+rep.toLocaleString('fr-FR')+'  [LANGUES] '+lng.toLocaleString('fr-FR'));
+    this.enriched=this.all;
+    btn.textContent='✅ Enrichissement terminé';
+    document.getElementById('dl-btn').classList.remove('hidden');
+    this.renderDataList();
+  },
+
+  // ── Contexte départemental CP/CE1 (taux de maîtrise moyen du département) ──
+  async enrichDeptEval(){
+    this.log('\n— Repères départementaux CP/CE1 —');
+    for(var k=0;k<DEPT_EVAL.length;k++){
+      var d=DEPT_EVAL[k];
+      this.log('⬇️  '+d.label+' …');
+      var rows=null;
+      try{
+        var txt=await (await fetch(ODS+d.ds+'/exports/json?limit=-1')).text();
+        rows=JSON.parse(txt); if(!Array.isArray(rows))rows=rows.results||[];
+      }catch(e){ this.log('   ❌ '+e.message+'\n'); continue; }
+      this.log('   ✓ '+rows.length.toLocaleString('fr-FR')+' lignes reçues');
+      if(rows[0]) this.log('   (champs: '+Object.keys(rows[0]).slice(0,8).join(', ')+')');
+      // Indexer par code département + garder la dernière année + moyenne français/maths
+      // Normalise un code dept en 2 chiffres (gère '061'→'61', '1'→'01', '2A' Corse)
+      function normDep(x){ x=String(x||'').trim().toUpperCase(); if(/^\d+$/.test(x))return (''+parseInt(x,10)).padStart(2,'0'); return x.replace(/^0+(?=\d)/,''); }
+      var byDep={};
+      for(var i=0;i<rows.length;i++){
+        var r=rows[i];
+        var dep=normDep(r.code_departement||r.departement||r.dep||r.code_dep||r.dpt||r.code||r.libelle_departement);
+        if(!dep)continue;
+        // chercher un taux de maîtrise (français + maths) — noms tolérants
+        var vals=[];
+        Object.keys(r).forEach(function(key){
+          if(/maitrise|maîtrise|satisfaisant|taux/i.test(key)){ var nv=parseFloat(r[key]); if(!isNaN(nv)&&nv>0&&nv<=100)vals.push(nv); }
+        });
+        if(vals.length){ var moy=Math.round(vals.reduce(function(a,b){return a+b;},0)/vals.length); byDep[dep]=moy; }
+      }
+      var n=0;
+      for(var j=0;j<this.all.length;j++){
+        var s=this.all[j]; if(s.type!=='Ecole')continue;
+        var dep2=normDep(s.dept||String(s.cp||'').slice(0,2));
+        if(byDep[dep2]!=null){ s[d.target]=byDep[dep2]; n++; }
+      }
+      this.log('   ✓ '+n.toLocaleString('fr-FR')+' écoles enrichies (par département)\n');
+    }
+  },
+
+  // ── Import des crèches CNAF → ajoute des établissements de type "Crèche" à la base ──
+  async importCreches(){
+    if(!this.all.length){alert('Chargez d\'abord ecoles-france.json.');return;}
+    var btn=document.getElementById('creche-btn');btn.disabled=true;btn.textContent='⏳ Import crèches…';
+    document.getElementById('dlog').classList.remove('hidden');
+    this.log('\n=== Import crèches CNAF démarré ===\n');
+    // retire les crèches déjà importées (réimport propre)
+    this.all=this.all.filter(function(s){return s.type!=='Crèche';});
+    var added=0;
+    for(var i=0;i<CRECHE_DS.length;i++){
+      var d=CRECHE_DS[i];
+      this.log('⬇️  '+d.label+' …');
+      var rows=null;
+      try{
+        var url=ODS_CAF+d.ds+'/exports/json?limit=-1';
+        var r=await fetch(url);
+        if(!r.ok)throw new Error('HTTP '+r.status);
+        var txt=await r.text();
+        try{ rows=JSON.parse(txt); }catch(pe){ throw new Error('JSON tronqué ('+(txt.length/1024|0)+' Ko)'); }
+        if(!Array.isArray(rows))rows=rows.results||[];
+      }catch(e){ this.log('   ❌ ÉCHEC : '+e.message+'\n'); continue; }
+      this.log('   ✓ '+rows.length.toLocaleString('fr-FR')+' lignes reçues');
+      for(var j=0;j<rows.length;j++){
+        var c=this.mapCreche(rows[j]);
+        if(c){ this.all.push(c); added++; }
+      }
+      this.log('   ✓ '+added.toLocaleString('fr-FR')+' crèches ajoutées\n');
+    }
+    this.log('=== Terminé : '+added.toLocaleString('fr-FR')+' crèches importées ===');
+    if(!added) this.log('\n⚠️ Si 0 : le nom du dataset CNAF a peut-être changé. Voir data.caf.fr et ajuster CRECHE_DS.');
+    this.enriched=this.all;
+    btn.textContent='✅ '+added+' crèches';
+    document.getElementById('dl-btn').classList.remove('hidden');
+  },
+  // Mappe une ligne CNAF vers un objet établissement unifié (champs tolérants)
+  mapCreche(row){
+    function g(){ for(var i=0;i<arguments.length;i++){ var v=row[arguments[i]]; if(v!=null&&v!=='')return v; } return null; }
+    var nom=g('nom','nom_etablissement','raison_sociale','libelle','nom_de_l_equipement','denomination');
+    // coordonnées : champs directs ou objet geo
+    var lat=g('latitude','lat','y'), lon=g('longitude','lon','lng','x');
+    var geo=g('geolocalisation','geo_point_2d','coordonnees','geopoint','geo_point');
+    if((lat==null||lon==null)&&geo){ if(Array.isArray(geo)){lat=geo[0];lon=geo[1];} else if(geo.lat!=null){lat=geo.lat;lon=geo.lon||geo.lng;} }
+    if(!nom||lat==null||lon==null)return null;
+    var commune=g('commune','ville','nom_commune','libelle_commune','commune_nom')||'';
+    var cp=g('code_postal','cp','codepostal')||'';
+    var adresse=g('adresse','adresse_complete','voie','libelle_voie')||'';
+    var places=parseInt(g('nombre_de_places','places','capacite','nb_places','capacite_d_accueil'),10);
+    var gest=String(g('gestionnaire','type_gestionnaire','statut_gestionnaire','nature_gestionnaire')||'').toLowerCase();
+    var statut = /priv|lucratif|entreprise|sas|sarl/.test(gest)?'Privé':(/associat/.test(gest)?'Associatif':'Public');
+    var sous=String(g('type','type_d_accueil','type_etablissement','categorie','nature')||'').toLowerCase();
+    var sousType = /micro/.test(sous)?'Micro-crèche' : /halte/.test(sous)?'Halte-garderie' : /multi/.test(sous)?'Multi-accueil' : /familial/.test(sous)?'Crèche familiale' : 'Crèche collective';
+    return {
+      uai:'CRECHE-'+(g('numero','id','identifiant','siret')||(lat+'_'+lon)),
+      nom:nom, type:'Crèche', sousType:sousType, statut:statut,
+      commune:commune, cp:String(cp), adresse:adresse,
+      lat:parseFloat(lat), lon:parseFloat(lon),
+      totalEleves:isNaN(places)?null:places,
+      opt:{}, web:null
+    };
+  },
+
+  downloadEnriched(){
+    if(!this.enriched){alert('Lancez d\'abord l\'enrichissement.');return;}
+    var blob=new Blob([JSON.stringify(this.enriched)],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=url;a.download='ecoles-france.json';a.click();
+    URL.revokeObjectURL(url);
+  },
+
+  esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+};
+App.boot();
+var ADMIN_PASS='eclaire2026'; // \u26a0 \u00c0 PERSONNALISER avant d\u00e9ploiement
+function adminGate(){
+  if(sessionStorage.getItem('ec_admin')==='1'){App.go('data');return;}
+  var p=prompt('Acc\u00e8s gestion des donn\u00e9es \u2014 mot de passe :');
+  if(p===ADMIN_PASS){sessionStorage.setItem('ec_admin','1');App.go('data');}
+  else{if(p!==null)alert('Mot de passe incorrect');history.replaceState(null,'',location.pathname+location.search);}
+}
+function routeHash(){
+  var h=location.hash;
+  if(h==='#admin'){adminGate();return;}
+  if(h.indexOf('#ecole=')===0){var u=decodeURIComponent(h.slice(7));var open=function(){if(App.all.length){App.openSchool(u);}else setTimeout(open,300);};open();return;}
+  if(h.indexOf('#compare=')===0){var ids=decodeURIComponent(h.slice(9)).split(',').filter(Boolean);var go=function(){if(App.all.length){App.compare=ids.slice(0,3);var bar=document.getElementById('cbar');bar.classList.add('on');document.getElementById('ccount').textContent=App.compare.length+' établissement'+(App.compare.length>1?'s':'')+' sélectionné'+(App.compare.length>1?'s':'');App.openCompare();}else setTimeout(go,300);};go();return;}
+}
+routeHash();
+window.addEventListener('hashchange',routeHash);
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+# ÉcoleClaire — robots.txt
+# Stratégie : site d'intérêt public, on veut être cité par les IA ET référencé par Google.
+
+# Moteurs classiques
+User-agent: Googlebot
+Allow: /
+User-agent: Bingbot
+Allow: /
+
+# Bots de recherche/citation IA (les autoriser = être cité dans les réponses)
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: GPTBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Perplexity-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
+
+# Tout le reste : autorisé
+User-agent: *
+Allow: /
+
+Sitemap: https://REMPLACER-PAR-VOTRE-DOMAINE/sitemap.xml
